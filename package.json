@@ -1,0 +1,27 @@
+{
+  "name": "@fantastic.dev/convex-env-sync",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Convex environment synchronization for Alchemy projects and pluggable secret sources.",
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22.18.0"
+  },
+  "packageManager": "pnpm@12.18.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FantasticDevHQ/convex-env-sync.git"
+  },
+  "scripts": {
+    "check": "node scripts/check.mjs",
+    "test:pr-standard": "node --test scripts/pr-standard.test.mjs scripts/enforce-pr-standard.test.mjs",
+    "test:worktree": "node --test scripts/worktree/*.test.mts",
+    "worktree:setup": "node scripts/worktree/cli.mts setup",
+    "worktree:start": "node scripts/worktree/cli.mts start",
+    "worktree:stop": "node scripts/worktree/cli.mts stop",
+    "worktree:teardown": "node scripts/worktree/cli.mts teardown",
+    "worktree:cleanup": "node scripts/worktree/cli.mts cleanup",
+    "worktree:prune": "node scripts/worktree/cli.mts prune"
+  }
+}
