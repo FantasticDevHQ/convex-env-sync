@@ -112,8 +112,9 @@ The `PR standard` workflow reads current PR metadata on opening, editing,
 reopening, pushes, and readiness for review. Invalid PRs receive a failing
 `PR standard` commit status and one bot comment listing corrections. Later runs
 update that comment; correcting the metadata changes it to a passing message.
-PRs remain open so authors can fix them. A main-branch ruleset requires this status
-before merging, including for administrators. It does not replace code review or CI.
+PRs remain open so authors can fix them. Once a main-branch ruleset is configured and verified, it must require this status
+before merging, including for administrators. The scaffold does not activate that
+protection. Status validation does not replace code review or CI.
 
 The workflow grants explicit contents-read, PR-write, issue-write, and status-write
 permissions to fetch metadata/files, update feedback, and publish statuses.
