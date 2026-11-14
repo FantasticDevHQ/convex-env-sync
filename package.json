@@ -43,5 +43,39 @@
   },
   "bin": {
     "convex-env-sync": "./src/cli/main.js"
-  }
+  },
+  "exports": {
+    ".": "./src/index.js",
+    "./sources/doppler": "./src/sources/doppler.js",
+    "./sources/infisical": "./src/sources/infisical.js",
+    "./convex/deployment": "./src/convex/deployment.js",
+    "./convex/defaults": "./src/convex/defaults.js",
+    "./cli": "./src/cli/commands.js",
+    "./alchemy": "./src/alchemy/index.js"
+  },
+  "files": [
+    "src/alchemy/index.js",
+    "src/cli/commands.js",
+    "src/cli/main.js",
+    "src/cli/ownership.js",
+    "src/convex/client.js",
+    "src/convex/defaults.js",
+    "src/convex/deployment.js",
+    "src/core/manifest.js",
+    "src/core/plan.js",
+    "src/core/reconcile.js",
+    "src/core/stages.js",
+    "src/core/verify.js",
+    "src/index.js",
+    "src/sources/doppler.js",
+    "src/sources/infisical.js",
+    "docs/architecture.md",
+    "docs/configuration.md",
+    "docs/alchemy.md",
+    "docs/cli.md",
+    "docs/package.md",
+    "assets/fantastic-dev-logo.svg",
+    "README.md",
+    "LICENSE"
+  ]
 }

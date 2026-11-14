@@ -1,6 +1,6 @@
 # Implementation roadmap
 
-The current repository has source-checkout selection, redacted plans, ownership-aware reconciliation, Doppler and optional Infisical readers, exact Convex deployment operations and project/type defaults with authorized propagation. The Alchemy adapter also verifies lifecycle ordering, fresh source reads and metadata-only state. The source-checkout CLI also uses the same pipeline. Packed consumption, package release and live consumer acceptance remain outstanding.
+The current repository has source-checkout selection, redacted plans, ownership-aware reconciliation, Doppler and optional Infisical readers, exact Convex deployment operations and project/type defaults with authorized propagation. The Alchemy adapter also verifies lifecycle ordering, fresh source reads and metadata-only state. The source-checkout CLI also uses the same pipeline. Packed consumption is tested outside the source checkout. Package publication and live consumer acceptance remain outstanding.
 
 1. Implement source-neutral selection, validation, redacted planning, ownership and explicit deletion rules. Prove behavior with synthetic providers.
 2. Add Doppler reads and Convex writes using the existing Distilled SDKs. Support defaults by deployment type and exact deployment updates, including local anonymous backends.

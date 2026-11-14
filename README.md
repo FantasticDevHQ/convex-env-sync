@@ -21,7 +21,7 @@
 
 Convex Env Sync is being built to deliver selected secrets from Doppler to Convex project defaults and individual deployments through Alchemy. It is intended for existing Convex applications, including pnpm Turborepos, with development, production and preview deployments.
 
-**Status: unpublished implementation in progress.** Source-checkout modules provide selection, ownership, Doppler and optional Infisical readers, scoped Convex writers, Alchemy lifecycle integration and a shared plan/apply CLI. No npm release or live consumer verification has been delivered.
+**Status: unpublished implementation in progress.** Source-checkout modules provide selection, ownership, Doppler and optional Infisical readers, scoped Convex writers, Alchemy lifecycle integration and a shared plan/apply CLI. A local tarball supports prerelease evaluation. No npm release or live consumer verification has been delivered.
 
 ## Quick start
 
@@ -70,7 +70,7 @@ Expected result: repository checks and the PR/worktree tooling tests pass withou
 - Reuse the existing Distilled SDKs and Alchemy secret loading.
 - Keep the sync engine independent of its secret source.
 
-Source-checkout APIs implement these rules. Packed consumption and live consumer acceptance remain outstanding.
+The APIs implement these rules. Packed consumption is tested outside the source repository; live consumer acceptance remains outstanding.
 
 ## Documentation
 
@@ -79,6 +79,7 @@ Source-checkout APIs implement these rules. Packed consumption and live consumer
 - [Implementation roadmap](docs/roadmap.md)
 - [Alchemy lifecycle and secret-state rules](docs/alchemy.md)
 - [Shared plan/apply CLI](docs/cli.md)
+- [Packed consumption and public imports](docs/package.md)
 - [Development and worktrees](docs/development.md)
 - [PR requirements](docs/pull-request-standard.md)
 
