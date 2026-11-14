@@ -1,6 +1,6 @@
 # Implementation roadmap
 
-The current repository has source-checkout manifest validation, read-only selection plans, a Doppler config reader and repository checks. No live sync, package release or consumer installation is delivered yet.
+The current repository has source-checkout manifest validation, read-only selection plans, ownership-aware reconciliation, a Doppler config reader and repository checks. No live sync, package release or consumer installation is delivered yet.
 
 1. Implement source-neutral selection, validation, redacted planning, ownership and explicit deletion rules. Prove behavior with synthetic providers.
 2. Add Doppler reads and Convex writes using the existing Distilled SDKs. Support defaults by deployment type and exact deployment updates, including local anonymous backends.

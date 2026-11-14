@@ -21,7 +21,7 @@
 
 Convex Env Sync is being built to deliver selected secrets from Doppler to Convex project defaults and individual deployments through Alchemy. It is intended for existing Convex applications, including pnpm Turborepos, with development, production and preview deployments.
 
-**Status: unpublished implementation in progress.** Source-checkout manifest validation and read-only selection plans are implemented. A Doppler source adapter reads one explicit config through Distilled. Provider reconciliation, CLI and Alchemy integration remain unimplemented. The current first result is a verified, credential-free source checkout. There is no npm installation or live sync command yet.
+**Status: unpublished implementation in progress.** Source-checkout manifest validation and read-only selection plans and ownership-aware reconciliation are implemented. A Doppler source adapter reads one explicit config through Distilled. Provider reconciliation, CLI and Alchemy integration remain unimplemented. The current first result is a verified, credential-free source checkout. There is no npm installation or live sync command yet.
 
 ## Quick start
 

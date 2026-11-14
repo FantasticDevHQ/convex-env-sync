@@ -1,6 +1,6 @@
 # Implementation boundaries
 
-The source-checkout `core/manifest.js` and `core/plan.js` modules implement selection and read-only planning. Remaining modules are:
+The source-checkout `core/manifest.js` and `core/plan.js` modules implement selection and read-only planning. `core/reconcile.js` adds ownership-aware sparse reconciliation without provider writes. Remaining modules are:
 
 - `core/`: manifest validation, ownership, redacted plans and reconciliation.
 - `sources/doppler.js`: implemented Distilled config reader. Other source adapters remain future work.
