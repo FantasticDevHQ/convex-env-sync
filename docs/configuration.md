@@ -102,7 +102,10 @@ loader. Never pass them to persistent resource inputs or log the result.
 The reader uses pinned Distilled `listSecrets` and Effect's fetch client. It
 reads `SYNC_CONVEX_DEFAULT_KEYS` and `SYNC_CONVEX_DEPLOYMENT_KEYS` from the exact
 config. Application values use Doppler's computed values so references resolve.
-Missing, masked, restricted or non-string selected values fail closed. It does
+Unmasked and masked computed strings are retrievable. Doppler masking controls
+dashboard display, not API availability. Restricted, missing, non-string or
+unknown-visibility selected values fail closed. See
+[Doppler secret visibility](https://docs.doppler.com/docs/secret-visibility). It does
 not fall back to raw values or a different config. Dynamic secrets and managed
 secrets are disabled. There are no adapter logs, state writes or destination
 calls. Errors are replaced with a fixed message without the SDK cause, which
