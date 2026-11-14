@@ -1,6 +1,6 @@
 # Convex Env Sync
 
-This is an unpublished, backend-free library with tested packed consumption and separately authorized consumer acceptance. Keep release claims aligned with docs/roadmap.md: no npm release or live production verification has been delivered. Keep public documentation consumer-neutral.
+This is a backend-free library published on npm as @fantastic.dev/convex-env-sync, with verified registry consumption and separately authorized consumer acceptance. Keep release claims aligned with docs/roadmap.md: live production verification has not been delivered. Keep public documentation consumer-neutral.
 
 Read docs/architecture.md and docs/development.md before changing implementation. Use pnpm and preserve its lockfile. Node.js 22.18+ is required for native TypeScript worktree scripts. Run `pnpm check` before handoff.
 
