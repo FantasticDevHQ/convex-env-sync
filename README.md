@@ -6,7 +6,7 @@
 
 <p align="center"><strong>A shared foundation for Convex environment synchronization.</strong></p>
 
-<p align="center">A <a href="https://fantastic.dev">Fantastic.Dev</a> Project</p>
+[A Fantastic.Dev Project](https://fantastic.dev)
 
 <p align="center">
   <a href="https://fantastic.dev"><img src="https://img.shields.io/badge/Fantastic.dev-94C173?style=for-the-badge&amp;logoColor=0c0e13" alt="Visit Fantastic.Dev" /></a>
@@ -21,7 +21,7 @@
 
 Convex Env Sync is being built to deliver selected secrets from Doppler to Convex project defaults and individual deployments through Alchemy. It is intended for existing Convex applications, including pnpm Turborepos, with development, production and preview deployments.
 
-**Status: unpublished implementation in progress.** Source-checkout manifest validation, read-only plans and ownership-aware reconciliation are implemented. Doppler reads one explicit config through Distilled; an optional Infisical reader accepts a caller-owned SDK client. Exact Convex deployment planning and apply use Distilled with readback verification. Shared defaults, CLI and Alchemy integration remain unimplemented. There is no npm release or live sync command yet.
+**Status: unpublished implementation in progress.** Source-checkout manifest validation, read-only plans and ownership-aware reconciliation are implemented. Doppler reads one explicit config through Distilled; an optional Infisical reader accepts a caller-owned SDK client. Exact Convex deployment planning and apply use Distilled with readback verification. Project/type defaults and explicitly authorized propagation are implemented. CLI and Alchemy integration remain unimplemented. There is no npm release or live sync command yet.
 
 ## Quick start
 

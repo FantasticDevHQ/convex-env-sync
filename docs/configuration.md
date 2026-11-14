@@ -1,6 +1,6 @@
 # Proposed configuration
 
-The provider configuration below remains a design example. Source-checkout selection and read-only planning are implemented as described next. No provider apply API is implemented yet.
+The provider configuration below remains a design example. Source-checkout selection, planning, exact deployment apply and project defaults are implemented in the modules documented below. A packaged configuration API, CLI and Alchemy adapter are not implemented yet.
 
 Each consuming application declares its Convex project, backend directory, Doppler project and config mapping. A Turborepo can declare multiple independent application targets. No workspace layout is hardcoded by the engine.
 
@@ -188,3 +188,47 @@ Configure caller-owned clients without secret logging or persistent value caches
 Tests use the SDK's response shape and a caller-supplied test client, compare the
 result with Doppler's real-SDK HTTP-boundary output, and run Doppler under an
 import hook that rejects Infisical resolution. No live account access is claimed.
+
+## Project defaults and authorized propagation
+
+`planDefaults`, `applyDefaults` and `defaultsIdentity` from
+`src/convex/defaults.js` operate on an explicit `{ teamId, projectId,
+deploymentType }` target. Type is required and must be `dev`, `prod` or
+`preview`. Supply only the selected baseline as `desired`, an in-memory team
+`token`, and optional ownership/deletions using the same explicit rules as exact
+deployments. Generated deployment-specific values belong in per-target overrides,
+not project defaults.
+
+The management SDK verifies project/team identity and reads defaults filtered to
+the exact type. Wrong-type rows, duplicate keys and incomplete paginated results
+fail closed before writes. The pinned SDK exposes no cursor parameter for this
+operation, so a response with `pagination.hasMore: true` is rejected rather than
+planning from partial data. Plans contain only target identity, operations and
+candidate ownership. Ordinary apply changes defaults only, with
+`applyToExistingDeployments: false` on every change. Existing deployments retain
+their values; defaults are not live inheritance.
+
+Optional `propagation` requires `authorized: true` and an explicit `targets`
+array. Each entry has an exact cloud `target` in the same project/team/type,
+optional string-valued `overrides`, and its own ownership/deletions. An explicit
+`overrides: null` is rejected as unavailable source data, not treated as an empty
+overlay. The helper
+combines the complete desired baseline with these declared overrides, preflights
+every destination before any mutation, then reconciles only the listed targets
+through `applyDeployment`. Duplicate deployments and cross-project/type targets
+are rejected. Anonymous local backends use exact deployment operations directly.
+No deployment discovery or implicit propagation to unlisted destinations occurs.
+
+For example, a dedicated preview URL stays in that target's `overrides` when the
+baseline rotates. Default deletions do not imply deployment deletions; those need
+separate target ownership and declarations. Raw overwrite-all propagation is
+unsupported: passing `applyToExistingDeployments: true` fails before network calls.
+This avoids Convex's [bulk overwrite behavior](https://docs.convex.dev/production/environment-variables#applying-default-changes-to-existing-deployments).
+
+Success requires in-memory readback verification of the defaults and every
+explicit propagation target. The result includes redacted `propagation` reports
+and `verified: true` only after all those operations complete. Planning is read-only.
+A failed propagated verification may follow successful earlier writes; no atomic
+multi-target transaction or rollback is promised. Re-observe before retrying,
+serialize operations per target and persist ownership only after overall success.
+No secret values or value hashes are returned in any report.

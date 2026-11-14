@@ -5,7 +5,7 @@ The source-checkout `core/manifest.js` and `core/plan.js` modules implement sele
 - `core/`: manifest validation, ownership, redacted plans and reconciliation.
 - `sources/doppler.js`: implemented Distilled config reader.
 - `sources/infisical.js`: optional caller-owned SDK client adapter with the same selection contract.
-- `convex/deployment.js`: exact deployment planning, scoped bulk updates and readback through Distilled. Project defaults remain future work.
+- `convex/deployment.js`: exact deployment planning, scoped bulk updates and readback through Distilled. The defaults module handles project/type updates and explicit verified propagation.
 - `alchemy/`: stage/lifecycle adapter calling the shared engine.
 - `cli/`: plan, apply and verification commands using the same engine.
 

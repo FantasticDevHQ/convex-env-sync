@@ -27,7 +27,7 @@ tests.push(...readdirSync(new URL('../src/', import.meta.url), { recursive: true
   .filter((name) => name.endsWith('.test.mjs'))
   .map((name) => `src/${name}`));
 tests.push('scripts/pr-standard.test.mjs', 'scripts/enforce-pr-standard.test.mjs');
-const result = spawnSync(process.execPath, ['--test', ...tests], {
+const result = spawnSync(process.execPath, ['--test', '--test-concurrency=1', ...tests], {
   cwd: root, stdio: 'inherit',
 });
 if (result.error) throw result.error;
