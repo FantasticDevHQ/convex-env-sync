@@ -1,6 +1,6 @@
 # Proposed configuration
 
-The provider configuration below remains a design example. Source-checkout selection, planning, exact deployment apply and project defaults are implemented in the modules documented below. The Alchemy adapter uses the stage pipeline described in [Alchemy lifecycle](alchemy.md). Package entrypoints and the CLI are not delivered yet.
+The provider configuration below remains a design example. Source-checkout selection, planning, exact deployment apply and project defaults are implemented in the modules documented below. The Alchemy adapter uses the stage pipeline described in [Alchemy lifecycle](alchemy.md). The [CLI](cli.md) uses the same validated mappings. Package export and packed-consumer verification remain outstanding.
 
 Each consuming application declares its Convex project, backend directory, Doppler project and config mapping. A Turborepo can declare multiple independent application targets. No workspace layout is hardcoded by the engine.
 

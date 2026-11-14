@@ -21,7 +21,7 @@
 
 Convex Env Sync is being built to deliver selected secrets from Doppler to Convex project defaults and individual deployments through Alchemy. It is intended for existing Convex applications, including pnpm Turborepos, with development, production and preview deployments.
 
-**Status: unpublished implementation in progress.** Source-checkout manifest validation, read-only plans and ownership-aware reconciliation are implemented. Doppler reads one explicit config through Distilled; an optional Infisical reader accepts a caller-owned SDK client. Exact Convex deployment planning and apply use Distilled with readback verification. Project/type defaults and explicitly authorized propagation are implemented. An Alchemy lifecycle adapter is implemented. CLI and packed consumer delivery remain outstanding. There is no npm release or live sync command yet.
+**Status: unpublished implementation in progress.** Source-checkout modules provide selection, ownership, Doppler and optional Infisical readers, scoped Convex writers, Alchemy lifecycle integration and a shared plan/apply CLI. No npm release or live consumer verification has been delivered.
 
 ## Quick start
 
@@ -70,7 +70,7 @@ Expected result: repository checks and the PR/worktree tooling tests pass withou
 - Reuse the existing Distilled SDKs and Alchemy secret loading.
 - Keep the sync engine independent of its secret source.
 
-These are implementation goals, not currently available APIs.
+Source-checkout APIs implement these rules. Packed consumption and live consumer acceptance remain outstanding.
 
 ## Documentation
 
@@ -78,6 +78,7 @@ These are implementation goals, not currently available APIs.
 - [Example configuration and manifests](docs/configuration.md)
 - [Implementation roadmap](docs/roadmap.md)
 - [Alchemy lifecycle and secret-state rules](docs/alchemy.md)
+- [Shared plan/apply CLI](docs/cli.md)
 - [Development and worktrees](docs/development.md)
 - [PR requirements](docs/pull-request-standard.md)
 
