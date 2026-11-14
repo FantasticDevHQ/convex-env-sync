@@ -75,11 +75,13 @@
     "docs/package.md",
     "assets/fantastic-dev-logo.svg",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "CHANGELOG.md"
   ],
   "publishConfig": {
     "access": "public",
-    "registry": "https://registry.npmjs.org/"
+    "registry": "https://registry.npmjs.org/",
+    "provenance": true
   },
   "homepage": "https://github.com/FantasticDevHQ/convex-env-sync#readme",
   "bugs": {

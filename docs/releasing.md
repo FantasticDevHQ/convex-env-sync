@@ -1,96 +1,106 @@
-# npm release procedure
+# npm releases
 
-The first release targets `@fantastic.dev/convex-env-sync@0.1.0` on public npmjs,
-with dist-tag `latest`. Preparing this source does not establish publication.
-CES-14 owns registry delivery and its independent acceptance. Keep release
-records and command output in that PR, without credentials or private consumer
-identifiers. Normal CI remains on UbiCloud.
+The initial public version is `@fantastic.dev/convex-env-sync@0.1.0`, published
+through an authorized operator login and publishing 2FA. It has no npm provenance.
+Future releases use the Better Stripe pattern described below. The first automated
+patch also carries the corrected configuration-guide publication status; immutable
+0.1.0 is never overwritten.
 
-## Preconditions
+## Protected release PRs
 
-The owner has authorized the first npm publication. Before publishing, verify
-that the authenticated npm account can publish in `@fantastic.dev`, all required
-checks pass on the final source commit, and its independent acceptance review
-passes. Use `npm whoami` and `npm org ls fantastic.dev --json` with approved
-operator authentication. Stop on missing access; do not change account policy,
-create a replacement scope or substitute another package name.
+Release Please reads conventional commits on main and maintains a version/changelog
+PR. Its manifest starts at 0.1.0 and its bootstrap source is the immutable initial
+release. Merging the release PR creates its tag and GitHub release, then publishes
+in the same workflow run. A GITHUB_TOKEN-created tag does not start another run.
 
-Use npm's supported login or an existing approved scoped publishing credential.
-Keep credentials out of commands, logs, archive contents and source files. When
-using 1Password, reuse one authorized terminal and inject references with `op run`;
-do not copy passwords or tokens into temporary files. A browser/security-key or
-current OTP challenge may require the account owner's interaction. Never weaken
-2FA to complete a release.
+The existing FantasticDev npm releases GitHub App creates the PR so ordinary CI
+runs. Its token is restricted to this repository. The owner explicitly approved
+automatic merging of generated metadata-only releases after protected checks,
+without a new per-version Linear ticket or Terra acceptance. Five PR sections and
+actual workflow identity are retained. Source-changing implementation PRs keep
+normal ticketing and independent final-commit acceptance.
 
-This initial procedure is an operator release from a reviewed local checkout,
-not an OIDC workflow. Record the actual machine, npm version and authentication
-method in the release PR. npm trusted publishing currently does not support
-self-hosted runners, including UbiCloud. See [npm trusted publishers](https://docs.npmjs.com/trusted-publishers/)
-and [provenance](https://docs.npmjs.com/generating-provenance-statements/).
-No publishing runner exception or provenance is claimed by this procedure. A
-future automated publisher requires its own reviewed configuration and any
-explicit CI-provider exception; ordinary verification stays on UbiCloud.
+Trusted-base validation checks the App identity, same-repository branch, changed
+file inventory and both immutable file contents through GitHub's API. Only a
+consistent version/manifest increase, appended changelog and README version text
+qualify. Scripts, dependencies, publishing settings, source files, deletions and
+renames cannot use this exception. Auto-merge pins the inspected head and relies
+on required branch protection; it never bypasses checks.
 
-## Pack the exact reviewed source
+## Verification and publishing
 
-Use a clean checkout of the independently accepted commit. Record the full SHA
-from `git rev-parse HEAD`; confirm `git status --porcelain` is empty. Do not pack
-a moving branch or include subsequent unreviewed edits.
+`Release PR` and `Verify release` run on `ubicloud-standard-2-ubuntu-2404`.
+Verification checks the immutable tag, fetched-main ancestry, workflow commit,
+package version, release manifest and changelog. It runs the full `pnpm check`,
+including packed consumers, then packs once on UbiCloud and audits every archive
+file against source. A receipt contains source SHA, version, tag and integrity.
+
+The owner approved only `Publish` on GitHub-hosted `ubuntu-24.04`, because npm
+trusted publishing and provenance do not support self-hosted runners. See
+[npm trusted publishing](https://docs.npmjs.com/trusted-publishers/) and
+[provenance](https://docs.npmjs.com/generating-provenance-statements/).
+No other CI provider exception is granted.
+
+The publisher downloads that same run's archive, checks its receipt and every
+file against the tag (allowing only pnpm's omission of the maintainer
+`packageManager` manifest field), then invokes native `npm publish --ignore-scripts
+--provenance`. It does not install dependencies or rebuild the archive. OIDC
+permission is scoped to this job and the `npm` environment. There is no long-lived
+npm token or provider fallback. The workflow requires npm 11.5.1 or later.
+
+Publishing checks the exact public version first. Existing identical contents
+are verified without another write; mismatched immutable contents fail. A publish
+is never retried automatically. Public metadata must then expose the reviewed
+integrity and npm's SLSA provenance before the job reports success. Bounded
+registry polling allows processing delay without another publication.
+
+## One-time activation
+
+Code alone does not establish activation. Before claiming success, verify:
+
+- The existing organization `RELEASE_APP_CLIENT_ID` variable and selected-repository
+  `RELEASE_APP_PRIVATE_KEY` secret cover this repository. Never copy or log the key.
+- GitHub auto-merge is enabled while required PR verification stays enforced.
+- The GitHub `npm` environment allows the intended main/tag release contexts.
+- The package's npm trusted publisher is GitHub Actions, organization
+  `FantasticDevHQ`, repository `convex-env-sync`, workflow filename `release.yml`,
+  environment `npm`. Bind only that repository/workflow/environment.
+- An actual generated release PR passes the required contexts and auto-merges,
+  then the exact tag verifies on UbiCloud and publishes with GitHub OIDC/provenance.
+- Record actual job runner labels/identities, public version, source, integrity,
+  provenance and clean registry-consumer acceptance in the owning PR.
+
+The initial operator authentication does not configure this publisher. Activation
+remains incomplete until the external binding and real workflow run are verified.
+
+## Recovery
+
+Never move or overwrite an existing tag/version, disable provenance, or insert a
+long-lived token when OIDC fails. Inspect the registry before any retry. A failed
+client process can still have published the immutable artifact.
+
+For an existing automated release tag, dispatch **at that exact tag ref**:
 
 ```sh
-pnpm install --frozen-lockfile
-pnpm check
-release_artifacts="$(mktemp -d)"
-pnpm pack --pack-destination "$release_artifacts"
-release_archive="$release_artifacts/fantastic.dev-convex-env-sync-0.1.0.tgz"
-tar -tzf "$release_archive"
-npm publish "$release_archive" --dry-run --ignore-scripts --access public --tag latest --registry https://registry.npmjs.org/ --logs-max=0
+gh workflow run release.yml --ref v0.1.1 -f release_tag=v0.1.1
 ```
 
-Audit the archive and repeat the clean-consumer checks in [package.md](package.md).
-The package's explicit file list excludes tooling, tests, state and release
-records. Record the archive's SHA-512 integrity before publishing and compare it
-with the registry artifact afterward. Do not put credentials in the archive or
-commit the archive or evidence.
-
-## Publish and verify
-
-Query public registry metadata first. If version 0.1.0 already exists, inspect
-its source and integrity; never overwrite or silently publish a different
-version. A 404 only establishes absence, not publishing access. With the exact
-reviewed archive and approved authentication, run:
-
-```sh
-npm publish "$release_archive" --ignore-scripts --access public --tag latest --registry https://registry.npmjs.org/ --logs-max=0
-npm view @fantastic.dev/convex-env-sync@0.1.0 version dist.tarball dist.integrity --json --registry https://registry.npmjs.org/ --logs-max=0
-npm view @fantastic.dev/convex-env-sync dist-tags --json --registry https://registry.npmjs.org/ --logs-max=0
-```
-
-If publishing fails or times out, recheck the registry before retrying. A failed
-client process does not prove the write failed. Do not automatically retry a
-publication or move an existing tag to hide a failure.
-
-Download the exact public tarball without maintainer authentication, compare
-its integrity with the reviewed archive, and install the exact registry version
-in a new external consumer. Run the README's in-memory plan, all six non-Alchemy
-imports without the peer, the installed offline CLI fixture, then the Alchemy
-import with its pinned optional peer. Obtain independent registry acceptance,
-including source SHA, version, integrity, public access, dist-tag, authentication
-method and provenance limitation. Only then close CES-14. These checks do not
-establish live production delivery.
+The workflow commit must equal the checked-out tag so provenance names the real
+source. A dispatch from a later main commit targeting an older tag fails closed.
+A manually pushed stable tag also goes through verification and publishing.
+Existing matching registry contents are not published again. Initial operator
+version 0.1.0 predates this workflow and is not a target for automated recovery.
 
 ## Release destinations
 
-- Update repository release status and create an immutable `v0.1.0` source tag
-  and GitHub release pointing to the accepted source after registry verification.
-  Record the package link, integrity and supported scope in release notes.
-- Update the organization profile's **From our toolkit** listing (CES-15).
-- Update the Fantastic.Dev website's existing tool presentation (CES-16), with
-  repository, documentation and npm links. Deployment needs its own authorization.
-- Preserve the official logo and Fantastic.Dev attribution across public docs.
-- Platform binaries, Homebrew and other registries are not release channels for
-  this JavaScript package. No additional channel is currently configured.
+After registry acceptance, verify the repository README, package guides and GitHub
+release; organization **From our toolkit** listing; and Fantastic.Dev project
+catalog with repository, README and npm links. Follow the shared
+[release destination checklist](https://github.com/FantasticDevHQ/oss-standards/blob/main/docs/release-checklist.md).
+Use the existing website release permissions and check the actual deployed result
+before claiming live delivery. Platform binaries, Homebrew and other registries
+are not configured release channels for this JavaScript package.
 
-Follow the shared [release destination checklist](https://github.com/FantasticDevHQ/oss-standards/blob/main/docs/release-checklist.md).
-A tag, GitHub release, PR, tarball test or follow-up ticket does not prove npm or
-website delivery. Verify each destination and retain honest limitations.
+Release evidence belongs in the PR and workflow output, never committed logs or
+screenshots. Registry consumption is distinct from live provider delivery;
+production integration still needs its own exact target and authorized acceptance.

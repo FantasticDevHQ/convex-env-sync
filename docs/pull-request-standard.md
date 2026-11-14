@@ -151,3 +151,7 @@ status and rethrows the original error even if status publication also fails.
 The intended required contexts are `PR standard` and `Repository quality gates`, after they have genuinely run and repository protections are configured and read back. This backend-free library has no real application-backend-isolation status. Consumer integration acceptance is separate.
 
 Until the bootstrap PR merges, the default branch does not contain the metadata workflow or its scripts. The first PR therefore requires local validation of its actual metadata; it cannot claim automatic base-branch enforcement is already active. Branch protections and package publication are separate owner-controlled operations.
+
+## Owner-approved generated release PRs
+
+Release Please PRs authored by `fantasticdev-npm-releases[bot]` in this repository may omit a per-version Linear ticket and independent Terra review after protected checks. This exception applies only to the same-repository generated release branch and a consistent version increase in package.json, release manifest, appended changelog and README version text. The five sections, evidence and actual workflow identity remain required. Trusted-base code reads base/head file contents through GitHub's API; it never executes the PR head with the metadata write token. Any source, dependency, script, publishing-setting, rename or deletion change fails the exception. Normal PRs retain the shared standard and independent acceptance requirements.
