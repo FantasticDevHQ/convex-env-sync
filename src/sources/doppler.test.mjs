@@ -45,10 +45,12 @@ test('absent preview config rejects with a sanitized error and never falls back'
   assert.deepEqual(configs, ['preview']);
 });
 
-test('missing, masked, malformed and credential selections all fail closed', async () => {
+test('missing, restricted, malformed and credential selections all fail closed', async () => {
   for (const secrets of [
     {}, { ...values, TOKEN: undefined },
-    { ...values, TOKEN: { computed: secret, computedVisibility: 'masked' } },
+    { ...values, TOKEN: { computed: secret, computedVisibility: 'restricted' } },
+    { ...values, TOKEN: { computed: secret, computedVisibility: 'unknown' } },
+    { ...values, TOKEN: { computed: null, computedVisibility: 'masked', raw: secret } },
     { ...values, TOKEN: { raw: secret } },
     { ...values, SYNC_CONVEX_DEFAULT_KEYS: { computed: secret } },
     { ...values, SYNC_CONVEX_DEFAULT_KEYS: { computed: '["DOPPLER_TOKEN"]' } },
@@ -85,4 +87,10 @@ test('transport failures never retain credential-bearing SDK error details', asy
     assert.equal(error.cause, undefined);
     return true;
   });
+});
+
+test('masked manifests and computed strings remain retrievable through the pinned SDK', async () => {
+  const masked = Object.fromEntries(Object.entries(values).map(([name, entry]) => [name, { ...entry, computedVisibility: 'masked' }]));
+  const selected = await loadDoppler({ ...input, fetch: async () => respond(masked) });
+  assert.deepEqual(selected, { defaults: { TOKEN: secret }, deployment: { SITE_URL: '' } });
 });

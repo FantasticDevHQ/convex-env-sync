@@ -5,7 +5,7 @@ import * as FetchHttpClient from 'effect/http/FetchHttpClient';
 import { selectValues } from '../core/manifest.js';
 
 function computed(entry) {
-  if (!entry || (entry.computedVisibility !== undefined && entry.computedVisibility !== 'unmasked')) {
+  if (!entry || (entry.computedVisibility !== undefined && !['unmasked', 'masked'].includes(entry.computedVisibility))) {
     throw new Error('Selected source value is unavailable');
   }
   const value = Redacted.isRedacted(entry.computed) ? Redacted.value(entry.computed) : entry.computed;
