@@ -1,6 +1,6 @@
 # Architecture
 
-This document defines the intended implementation. Source-checkout selection, read-only planning and ownership-aware reconciliation are implemented. Exact deployment planning/apply is implemented using Distilled with in-memory verification. Project/type defaults and explicit per-target propagation are also implemented. Alchemy lifecycle integration is implemented with fresh reads and metadata-only state. The shared CLI uses the same stage pipeline. Packed consumption is tested outside the source checkout; live consumer acceptance remains outstanding.
+This document describes the implemented design. Source-checkout selection, read-only planning and ownership-aware reconciliation are implemented. Exact deployment planning/apply is implemented using Distilled with in-memory verification. Project/type defaults and explicit per-target propagation are also implemented. Alchemy lifecycle integration is implemented with fresh reads and metadata-only state. The shared CLI uses the same stage pipeline. Packed consumption is tested outside the source checkout; independent consumer acceptance covers local isolation, cloud development apply/rotation, preview initialization/override preservation and read-only development planning. Live production verification and npm publication remain outside that acceptance.
 
 ## Existing foundations
 

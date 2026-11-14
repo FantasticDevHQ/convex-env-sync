@@ -1,6 +1,6 @@
 # Proposed configuration
 
-The provider configuration below remains a design example. Source-checkout selection, planning, exact deployment apply and project defaults are implemented in the modules documented below. The Alchemy adapter uses the stage pipeline described in [Alchemy lifecycle](alchemy.md). The [CLI](cli.md) uses the same validated mappings. Public ESM exports and external packed-consumer verification are described in [package consumption](package.md). Publication and live consumer acceptance remain outstanding.
+The provider configuration below remains a design example. Source-checkout selection, planning, exact deployment apply and project defaults are implemented in the modules documented below. The Alchemy adapter uses the stage pipeline described in [Alchemy lifecycle](alchemy.md). The [CLI](cli.md) uses the same validated mappings. Public ESM exports and external packed-consumer verification are described in [package consumption](package.md). Independent consumer acceptance covers local isolation, cloud development apply/rotation, preview initialization/override preservation and read-only development planning. Publication and live production verification remain outstanding.
 
 Each consuming application declares its Convex project, backend directory, Doppler project and config mapping. A Turborepo can declare multiple independent application targets. No workspace layout is hardcoded by the engine.
 
