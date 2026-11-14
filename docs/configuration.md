@@ -59,8 +59,8 @@ are valid values. Names beginning with `DOPPLER_`, `CONVEX_` or `SYNC_CONVEX_`
 are reserved for credentials and control inputs. Validation errors omit input
 values and JSON parser details. Unselected source values are ignored.
 
-Explicit overlays, destination identities, ownership, deletion and drift
-reconciliation remain subsequent roadmap work.
+Explicit overlays and provider identity verification remain subsequent roadmap work.
+Ownership-aware reconciliation is described below.
 
 ## Ownership-aware reconciliation
 
@@ -91,3 +91,25 @@ selected key, remove it from the desired selection and declare the deletion.
 Ownership is an authorization input supplied by the trusted consumer. Do not
 accept an untrusted PR's claimed ownership metadata as authority to delete keys.
 Provider writers and lifecycle persistence are subsequent roadmap work.
+
+## Doppler source-checkout reader
+
+`loadDoppler` from `src/sources/doppler.js` accepts explicit `project`, `config`
+and `token` strings and returns the same secret-bearing `{ defaults, deployment }`
+records as `selectValues`. Supply credentials in memory from the caller's secret
+loader. Never pass them to persistent resource inputs or log the result.
+
+The reader uses pinned Distilled `listSecrets` and Effect's fetch client. It
+reads `SYNC_CONVEX_DEFAULT_KEYS` and `SYNC_CONVEX_DEPLOYMENT_KEYS` from the exact
+config. Application values use Doppler's computed values so references resolve.
+Missing, masked, restricted or non-string selected values fail closed. It does
+not fall back to raw values or a different config. Dynamic secrets and managed
+secrets are disabled. There are no adapter logs, state writes or destination
+calls. Errors are replaced with a fixed message without the SDK cause, which
+may contain credentials or response data.
+
+Requests use the standard Doppler endpoint, reject redirects, bypass fetch
+caching, disable SDK automatic retries and have a 30-second timeout. Callers may
+retry the whole read explicitly. An optional `fetch` implementation allows
+credential-free HTTP-boundary testing. A passing synthetic test is not proof of
+live Doppler access or Convex delivery.
