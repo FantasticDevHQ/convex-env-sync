@@ -21,7 +21,7 @@
 
 Convex Env Sync delivers selected environment values from Doppler to Convex project defaults and exact deployments. Use its shared engine from a CLI or Alchemy, with explicit mappings for development, production, previews and anonymous local worktrees. Source adapters are replaceable; an optional Infisical adapter accepts a caller-owned client.
 
-**Package version: 0.1.0.** See [npm](https://www.npmjs.com/package/@fantastic.dev/convex-env-sync) for currently published versions. Packed consumption and independent consumer acceptance cover local isolation, cloud development apply/rotation, preview initialization/override preservation and read-only development planning. Production mappings are tested with controlled provider responses; live production delivery has not been verified. The consumer acceptance used the non-Alchemy entrypoints; the Alchemy adapter has separate pinned-runtime tests. <!-- x-release-please-version -->
+**Package version: 0.1.1.** See [npm](https://www.npmjs.com/package/@fantastic.dev/convex-env-sync) for currently published versions. Packed consumption and independent consumer acceptance cover local isolation, cloud development apply/rotation, preview initialization/override preservation and read-only development planning. Production mappings are tested with controlled provider responses; live production delivery has not been verified. The consumer acceptance used the non-Alchemy entrypoints; the Alchemy adapter has separate pinned-runtime tests. <!-- x-release-please-version -->
 
 ## Quick start
 
@@ -30,8 +30,8 @@ Requires Node.js 22.18+. Runtime modules are JavaScript ESM; TypeScript declarat
 Install from npm in your application:
 
 ```sh
-npm install @fantastic.dev/convex-env-sync@0.1.0 # x-release-please-version
-# or: pnpm add @fantastic.dev/convex-env-sync@0.1.0 # x-release-please-version
+npm install @fantastic.dev/convex-env-sync@0.1.1 # x-release-please-version
+# or: pnpm add @fantastic.dev/convex-env-sync@0.1.1 # x-release-please-version
 ```
 
 Try a selection-only plan without credentials or provider access:
