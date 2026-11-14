@@ -1,9 +1,8 @@
 # Alchemy lifecycle integration
 
-The source-checkout adapter is implemented in `src/alchemy/index.js` and verified
+The `@fantastic.dev/convex-env-sync/alchemy` adapter is verified
 against Alchemy 2.0.0-beta.87 with Effect 4.1.4. Alchemy is an optional peer, so
-core and provider-only consumers do not need it. The [source-checkout CLI](cli.md) shares the pipeline. There is no published
-package yet.
+core and provider-only consumers do not need it. The [CLI](cli.md) shares the pipeline. See [package installation](package.md).
 
 ## Stage mapping and runtime loaders
 
@@ -51,14 +50,14 @@ loaders or provider writes.
 
 ## Resource composition
 
-This source-checkout helper illustrates the complete registration shape. The
+This installed-consumer helper illustrates the complete registration shape. The
 consumer supplies its approved target, state layer and fresh runtime loaders.
 No credentials are resource inputs.
 
 ```js
 import * as Effect from 'effect/Effect';
 import { Stack } from 'alchemy/Stack';
-import { Sync, syncProvider } from './src/alchemy/index.js';
+import { Sync, syncProvider } from '@fantastic.dev/convex-env-sync/alchemy';
 
 export function previewStack({ target, state, loadSelected, loadToken }) {
   return Stack('example', {

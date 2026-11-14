@@ -7,7 +7,7 @@ pnpm install --frozen-lockfile
 pnpm check
 ```
 
-`pnpm check` runs core and source-adapter tests, verifies scaffold integrity and runs the PR validator/enforcer and worktree unit/freshness tests. It does not contact Doppler or Convex, or prove real secret delivery. No application backend or frontend exists in this repository. Packed-consumer checks use the populated pnpm store offline, including the pinned optional Alchemy peer; run the frozen install before checks. See [package consumption](package.md).
+`pnpm check` runs core and source-adapter tests, verifies package integrity and runs the PR validator/enforcer and worktree unit/freshness tests. It does not contact Doppler or Convex, or prove real secret delivery. No application backend or frontend exists in this repository. Packed-consumer checks use the populated pnpm store offline, including the pinned optional Alchemy peer; run the frozen install before checks. See [package consumption](package.md).
 
 ## Backend-free lifecycle
 
@@ -49,3 +49,7 @@ the same otherwise-free port between setup calls. Serial file execution keeps
 those fixtures independent. The toolkit's explicit parallel-allocation tests
 still run their concurrent setup operations and verify locking within a shared
 registry. Vendored tooling and its provenance remain unchanged.
+
+## Releasing
+
+Use the [npm release procedure](releasing.md) for exact-source packing, authentication, registry verification and destination updates. Packing is a maintainer check; consumer onboarding starts with npm.

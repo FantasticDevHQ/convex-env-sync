@@ -1,7 +1,6 @@
 {
   "name": "@fantastic.dev/convex-env-sync",
-  "version": "0.0.0",
-  "private": true,
+  "version": "0.1.0",
   "description": "Convex environment synchronization for Alchemy projects and pluggable secret sources.",
   "type": "module",
   "license": "MIT",
@@ -77,5 +76,20 @@
     "assets/fantastic-dev-logo.svg",
     "README.md",
     "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "homepage": "https://github.com/FantasticDevHQ/convex-env-sync#readme",
+  "bugs": {
+    "url": "https://github.com/FantasticDevHQ/convex-env-sync/issues"
+  },
+  "keywords": [
+    "convex",
+    "environment",
+    "doppler",
+    "alchemy",
+    "secrets"
   ]
 }

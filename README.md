@@ -21,83 +21,44 @@
 
 Convex Env Sync delivers selected environment values from Doppler to Convex project defaults and exact deployments. Use its shared engine from a CLI or Alchemy, with explicit mappings for development, production, previews and anonymous local worktrees. Source adapters are replaceable; an optional Infisical adapter accepts a caller-owned client.
 
-**Status: unpublished release candidate (`0.0.0`).** Install the local tarball below for evaluation. There is no npm release yet. Packed consumption and independent consumer acceptance cover local isolation, cloud development apply/rotation, preview initialization/override preservation and read-only development planning. Production mappings are tested with controlled provider responses; live production delivery has not been verified. The consumer acceptance used the non-Alchemy entrypoints; the Alchemy adapter has separate pinned-runtime tests.
+**Release target: 0.1.0.** Check [npm](https://www.npmjs.com/package/@fantastic.dev/convex-env-sync) for currently published versions. Packed consumption and independent consumer acceptance cover local isolation, cloud development apply/rotation, preview initialization/override preservation and read-only development planning. Production mappings are tested with controlled provider responses; live production delivery has not been verified. The consumer acceptance used the non-Alchemy entrypoints; the Alchemy adapter has separate pinned-runtime tests.
 
 ## Quick start
 
-Requires Git, Node.js 22.18+ and pnpm 12.18.0. Runtime modules are JavaScript ESM; TypeScript declarations and CommonJS entrypoints are not supplied.
+Requires Node.js 22.18+. Runtime modules are JavaScript ESM; TypeScript declarations and CommonJS entrypoints are not supplied.
 
-Prepare the source and dependency store:
+Install from npm in your application:
 
 ```sh
-git clone https://github.com/FantasticDevHQ/convex-env-sync.git
-cd convex-env-sync
-pnpm install --frozen-lockfile
-pnpm check
+npm install @fantastic.dev/convex-env-sync@0.1.0
+# or: pnpm add @fantastic.dev/convex-env-sync@0.1.0
 ```
 
-Pack the candidate and install it in a fresh directory outside the checkout. The offline install reuses the store populated above and disables lifecycle scripts and automatic peer installation:
+Try a selection-only plan without credentials or provider access:
 
 ```sh
-env_sync_artifacts="$(mktemp -d)"
-pnpm pack --pack-destination "$env_sync_artifacts"
-env_sync_consumer="$(mktemp -d)"
-cd "$env_sync_consumer"
-printf '{"private":true,"type":"module"}\n' > package.json
-pnpm add --offline --ignore-scripts --config.auto-install-peers=false \
-  "$env_sync_artifacts/fantastic.dev-convex-env-sync-0.0.0.tgz"
-```
-
-Create an offline plan fixture. These identifiers and values are nonfunctional examples; every provider request is handled in memory:
-
-```sh
-cat > sync.json <<'JSON'
-{
-  "stages": {
-    "dev": {
-      "kind": "dev",
-      "source": "offline",
-      "target": {
-        "kind": "cloud",
-        "url": "https://example-dev.convex.cloud",
-        "teamId": 1,
-        "projectId": 2,
-        "deploymentId": 3,
-        "deploymentType": "dev"
-      }
-    }
-  }
-}
-JSON
-cat > runtime.mjs <<'JS'
-export function createRuntime() {
-  return {
-    sources: {
-      offline: async () => ({ defaults: { APP_REGION: 'example-region' }, deployment: {} }),
-    },
-    getToken: async () => 'offline-placeholder',
-    fetch: async (input, options = {}) => {
-      const url = new URL(input);
-      if ((options.method ?? 'GET') !== 'GET' || url.origin !== 'https://example-dev.convex.cloud') {
-        throw new Error('Unexpected offline request');
-      }
-      if (url.pathname === '/api/v1/deployment_info') {
-        return Response.json({ kind: 'cloud', id: 3, projectId: 2, teamId: 1, deploymentType: 'dev' });
-      }
-      if (url.pathname === '/api/v1/list_environment_variables') {
-        return Response.json({ environmentVariables: {} });
-      }
-      throw new Error('Unexpected offline endpoint');
-    },
-  };
-}
+node --input-type=module <<'JS'
+import { plan } from '@fantastic.dev/convex-env-sync';
+console.log(JSON.stringify(plan({
+  source: { APP_REGION: 'example-region' },
+  selection: { defaults: '["APP_REGION"]', deployment: '[]' },
+}), null, 2));
 JS
-pnpm exec convex-env-sync plan --stage dev --config sync.json --runtime runtime.mjs
 ```
 
-The JSON report contains `operations: [{"name":"APP_REGION","operation":"set"}]` and name-only ownership metadata for the synthetic target. It contains neither `example-region` nor the placeholder credential. This fixture makes no network call, provider write or ownership-file write. It verifies the installed CLI and shared planner; it does not establish live provider access.
+The result is a name-only plan:
 
-Core, source, writer and CLI imports work without Alchemy. Install `alchemy@2.0.0-beta.87` when using `@fantastic.dev/convex-env-sync/alchemy`; compatibility with other Alchemy versions is unverified. See [public imports and packed consumption](docs/package.md).
+```json
+{"defaults":[{"name":"APP_REGION","operation":"set"}],"deployment":[]}
+```
+
+This first example selects source keys in memory. To compare with an actual destination, configure the [CLI runtime](docs/cli.md) and run a read-only plan:
+
+```sh
+npx --no-install convex-env-sync plan --stage dev --config sync.json --runtime sync-runtime.mjs
+```
+
+Core, source, writer and CLI imports work without Alchemy. Install `alchemy@2.0.0-beta.87` when using `@fantastic.dev/convex-env-sync/alchemy`; compatibility with other Alchemy versions is unverified. See [public imports and package consumption](docs/package.md). Maintainers can test a candidate before publishing using the [packed CLI fixture](docs/package.md#offline-cli-fixture).
 
 ## Configure a real application
 
@@ -128,12 +89,12 @@ https://github.com/FantasticDevHQ/convex-env-sync/blob/main/docs/configuration.m
 https://github.com/FantasticDevHQ/convex-env-sync/blob/main/docs/cli.md
 
 Read applicable AGENTS.md files, inspect the consuming app and preserve its work.
-Follow the README's unpublished tarball installation and offline CLI plan first.
+Install the exact npm version in the README and run its in-memory plan first.
 Report the installed artifact, commands and name-only expected operations.
 For integration, identify explicit stages, source configs, selection manifests,
 exact destination identities and existing credential loaders. Prepare the app's
 integration PR with its required checks and evidence. Obtain authorization before
-provider writes, provisioning, deployment or publication; the offline setup does
+provider writes, provisioning, deployment or publication; the example does
 not authorize those operations. Keep secret values out of source, state and proof.
 ```
 
