@@ -114,6 +114,56 @@ retry the whole read explicitly. An optional `fetch` implementation allows
 credential-free HTTP-boundary testing. A passing synthetic test is not proof of
 live Doppler access or Convex delivery.
 
+## Exact Convex deployment operations
+
+`planDeployment`, `applyDeployment` and `deploymentIdentity` are source-checkout
+exports from `src/convex/deployment.js`. Supply a flat, complete `desired` record
+of selected application strings, an in-memory `token`, optional target-scoped
+`ownership` and explicit `deletions`. The caller finishes source loading before
+invoking these operations. Neither function provisions a deployment or updates
+project defaults.
+
+Cloud targets require `kind: 'cloud'`, an HTTPS `url` under `convex.cloud`, including regional subdomains,
+positive numeric `teamId`, `projectId` and `deploymentId`, and an explicit
+`deploymentType` of `dev`, `prod` or `preview`. The authenticated Distilled
+`getDeploymentInfo` response must match every identifier and type.
+
+Local targets require `kind: 'local'`, a loopback HTTP `url` with the toolkit's
+allocated port, the exact `anonymous-...` `instanceName`, and an explicit
+`protectedNames` array of generated local auth variable names. Use `[]` only when
+the consumer has no generated identity variables. The consumer's existing
+worktree toolkit supplies this identity and its local admin credential. The
+writer reads the public `/instance_name` health endpoint, then requires an
+authenticated SDK `getDeploymentInfo` response of `selfHosted`. Distilled does
+not expose the public health endpoint, so only that identity read uses fetch
+directly. Application variable reads and writes always use Distilled.
+
+Identity is checked before observation, again immediately before a write and
+during verification. The URL rejects credentials, paths, queries, fragments and
+redirects. Inputs are snapshotted before network awaits. Local protected names
+cannot appear in desired values or deletion declarations. `deploymentIdentity`
+returns a non-secret canonical string for ownership; local identities include
+both the instance name and URL, so two worktrees with the same backend-directory
+name still have different ownership scopes.
+
+`planDeployment` observes current values and returns the target identity,
+name-only operations and candidate ownership. It performs no updates.
+`applyDeployment` sends at most one sparse `updateEnvironmentVariables` call,
+then reads actual values and compares selected values, deletions and previously
+observed unrelated keys in memory. Equal values skip the update call. A success
+returns the redacted plan, verified ownership and `verified: true`; no raw values
+or hashes are returned. Persist ownership only after this success. A write may
+have succeeded even when subsequent verification fails. Re-observe and reconcile
+before retrying; no rollback or atomic compare-and-swap is claimed. Consumers
+must serialize overlapping operations for the same target.
+
+Distilled Convex 1.0.0-rc.20 and Effect 4.1.4 are pinned. Requests disable retries
+and caching, reject redirects and time out after 30 seconds. Errors are sanitized
+without SDK causes. Tests use synthetic HTTP responses through the real SDK,
+including two simulated local targets. Real anonymous-backend isolation remains
+consumer acceptance work. This backend-free package does not provision a backend
+for its tests.
+
 ## Optional Infisical reader
 
 `loadInfisical` from `src/sources/infisical.js` accepts `client`, `projectId`,

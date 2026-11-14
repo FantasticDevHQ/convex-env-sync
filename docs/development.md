@@ -1,6 +1,6 @@
 # Development
 
-Requires Node.js 22.18+ and pnpm 12.18.0. Native TypeScript stripping is used only by the vendored worktree tooling. Core selection and planning use dependency-free JavaScript ES modules. The Doppler adapter pins `@distilled.cloud/doppler` 1.0.0-rc.20 and Effect 4.1.4. Tests intercept HTTP at the fetch boundary while exercising the real SDK.
+Requires Node.js 22.18+ and pnpm 12.18.0. Native TypeScript stripping is used only by the vendored worktree tooling. Core selection and planning use dependency-free JavaScript ES modules. The provider adapters pin `@distilled.cloud/doppler` and `@distilled.cloud/convex` 1.0.0-rc.20 with Effect 4.1.4. Tests intercept HTTP at the fetch boundary while exercising the real SDK.
 
 ```sh
 pnpm install --frozen-lockfile

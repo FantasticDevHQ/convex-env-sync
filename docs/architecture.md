@@ -1,6 +1,6 @@
 # Architecture
 
-This document defines the intended implementation. Source-checkout selection, read-only planning and ownership-aware reconciliation are implemented. Provider reconciliation and live sync are not implemented.
+This document defines the intended implementation. Source-checkout selection, read-only planning and ownership-aware reconciliation are implemented. Exact deployment planning/apply is implemented using Distilled with in-memory verification. Project defaults and integrated live consumer sync are not implemented.
 
 ## Existing foundations
 
