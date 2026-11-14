@@ -3,9 +3,9 @@
 The source-checkout `core/manifest.js` and `core/plan.js` modules implement selection and read-only planning. Remaining modules are:
 
 - `core/`: manifest validation, ownership, redacted plans and reconciliation.
-- `sources/`: Doppler first, then optional independent secret-source adapters.
+- `sources/doppler.js`: implemented Distilled config reader. Other source adapters remain future work.
 - `convex/`: project-default and exact-deployment operations using Distilled.
 - `alchemy/`: stage/lifecycle adapter calling the shared engine.
 - `cli/`: plan, apply and verification commands using the same engine.
 
-No package entrypoints or cloud dependencies are shipped yet. See [the architecture](../docs/architecture.md).
+Package entrypoints are not shipped yet. The Doppler adapter pins Distilled and Effect runtime dependencies. See [the architecture](../docs/architecture.md).
