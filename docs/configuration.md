@@ -1,6 +1,6 @@
-# Proposed configuration
+# Configuration
 
-The provider configuration below remains a design example. Source-checkout selection, planning, exact deployment apply and project defaults are implemented in the modules documented below. The Alchemy adapter uses the stage pipeline described in [Alchemy lifecycle](alchemy.md). The [CLI](cli.md) uses the same validated mappings. Public ESM exports and external packed-consumer verification are described in [package consumption](package.md). Publication and live consumer acceptance remain outstanding.
+The application inventory below is illustrative, not the CLI configuration schema. Use the exact stage mappings in the CLI or Alchemy guides for executable configuration. Source-checkout selection, planning, exact deployment apply and project defaults are implemented in the modules documented below. The Alchemy adapter uses the stage pipeline described in [Alchemy lifecycle](alchemy.md). The [CLI](cli.md) uses the same validated mappings. Public ESM exports and external packed-consumer verification are described in [package consumption](package.md). Independent consumer acceptance covers local isolation, cloud development apply/rotation, preview initialization/override preservation and read-only development planning. Publication and live production verification remain outstanding.
 
 Each consuming application declares its Convex project, backend directory, Doppler project and config mapping. A Turborepo can declare multiple independent application targets. No workspace layout is hardcoded by the engine.
 
@@ -36,7 +36,7 @@ The selected keys must exist in that config. Values are not included in this exa
 
 Defaults keys are written to the selected project/type and are also part of the desired baseline when reconciling an existing deployment. Deployment keys are written only to the selected deployment. The two lists are disjoint; an override of a baseline key requires an explicit overlay input so accidental overlap fails validation.
 
-For a dedicated PR source config, resolve that config as an explicit overlay on the preview baseline. Generated inputs, such as a PR URL or local auth identity, must name the variables they override. A future Infisical adapter maps its environment/folder selection to the same defaults and override structure.
+For a dedicated PR source config, resolve that config as an explicit overlay on the preview baseline. Generated inputs, such as a PR URL or local auth identity, must name the variables they override. The optional Infisical adapter maps its environment/folder selection to the same defaults and override structure; its caller-owned client contract is described below.
 
 Doppler project tags may be used for project discovery only. They are not individual-secret routing metadata. Reference: [Doppler project tags](https://docs.doppler.com/docs/tags).
 
@@ -50,7 +50,7 @@ It returns separate `defaults` and `deployment` arrays of `{ name, operation:
 authorize an apply, or imply that defaults propagate to existing deployments.
 
 `selectValues` in `src/core/manifest.js` returns the selected string records for
-future adapters. Its return value contains secrets. Keep it in memory and never
+source adapters. Its return value contains secrets. Keep it in memory and never
 serialize or log it. Only the plan is safe to serialize.
 
 Names must match `[A-Z][A-Z0-9_]*`. Duplicate names, overlap between manifests,
@@ -59,8 +59,10 @@ are valid values. Names beginning with `DOPPLER_`, `INFISICAL_`, `CONVEX_` or `S
 are reserved for credentials and control inputs. Validation errors omit input
 values and JSON parser details. Unselected source values are ignored.
 
-Explicit overlays and provider identity verification remain subsequent roadmap work.
-Ownership-aware reconciliation is described below.
+Explicit overlays and generated overrides are implemented by the shared stage
+pipeline described in [Alchemy lifecycle](alchemy.md) and [CLI configuration](cli.md).
+The provider writers verify authenticated destination identity, as described below.
+Ownership-aware reconciliation is described in the next section.
 
 ## Ownership-aware reconciliation
 
@@ -90,7 +92,9 @@ selected key, remove it from the desired selection and declare the deletion.
 
 Ownership is an authorization input supplied by the trusted consumer. Do not
 accept an untrusted PR's claimed ownership metadata as authority to delete keys.
-Provider writers and lifecycle persistence are subsequent roadmap work.
+The deployment/defaults writers below apply and verify sparse changes. The
+[CLI](cli.md) persists verified name-only ownership atomically; the
+[Alchemy adapter](alchemy.md) retains metadata-only lifecycle state.
 
 ## Doppler source-checkout reader
 
@@ -163,9 +167,10 @@ must serialize overlapping operations for the same target.
 Distilled Convex 1.0.0-rc.20 and Effect 4.1.4 are pinned. Requests disable retries
 and caching, reject redirects and time out after 30 seconds. Errors are sanitized
 without SDK causes. Tests use synthetic HTTP responses through the real SDK,
-including two simulated local targets. Real anonymous-backend isolation remains
-consumer acceptance work. This backend-free package does not provision a backend
-for its tests.
+including two simulated local targets. Independent consumer acceptance has
+separately verified real anonymous-backend isolation, including preservation of
+generated auth identities. Those live checks belong to the consuming application;
+this backend-free package does not provision a backend for its tests.
 
 ## Optional Infisical reader
 

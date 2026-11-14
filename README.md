@@ -19,38 +19,15 @@
 
 ---
 
-Convex Env Sync is being built to deliver selected secrets from Doppler to Convex project defaults and individual deployments through Alchemy. It is intended for existing Convex applications, including pnpm Turborepos, with development, production and preview deployments.
+Convex Env Sync delivers selected environment values from Doppler to Convex project defaults and exact deployments. Use its shared engine from a CLI or Alchemy, with explicit mappings for development, production, previews and anonymous local worktrees. Source adapters are replaceable; an optional Infisical adapter accepts a caller-owned client.
 
-**Status: unpublished implementation in progress.** Source-checkout modules provide selection, ownership, Doppler and optional Infisical readers, scoped Convex writers, Alchemy lifecycle integration and a shared plan/apply CLI. A local tarball supports prerelease evaluation. No npm release or live consumer verification has been delivered.
+**Status: unpublished release candidate (`0.0.0`).** Install the local tarball below for evaluation. There is no npm release yet. Packed consumption and independent consumer acceptance cover local isolation, cloud development apply/rotation, preview initialization/override preservation and read-only development planning. Production mappings are tested with controlled provider responses; live production delivery has not been verified. The consumer acceptance used the non-Alchemy entrypoints; the Alchemy adapter has separate pinned-runtime tests.
 
 ## Quick start
 
-### Have my agent set this up
+Requires Git, Node.js 22.18+ and pnpm 12.18.0. Runtime modules are JavaScript ESM; TypeScript declarations and CommonJS entrypoints are not supplied.
 
-Copy this into your coding agent to prepare a source checkout:
-
-```text
-Prepare the Convex Env Sync source repository using these public documents:
-https://github.com/FantasticDevHQ/convex-env-sync
-https://github.com/FantasticDevHQ/convex-env-sync/blob/main/docs/development.md
-https://github.com/FantasticDevHQ/convex-env-sync/blob/main/docs/architecture.md
-
-This is an unpublished scaffold. Do not install a presumed npm release or wire
-placeholder functions into a consuming application. Clone the source separately
-from an existing app, or use its existing clean source checkout.
-Read applicable AGENTS.md and AGENT.md files. Inspect Git status, package manager,
-lockfile and prerequisites. Preserve existing work. Use Node.js 22.18 or newer
-and the pnpm version declared in package.json.
-Run pnpm install --frozen-lockfile, then pnpm check. Report the checkout path,
-commands, passed checks and remaining implementation work. A passing check
-validates repository tooling; it does not prove external secret synchronization.
-Do not request credentials, deploy, publish, or modify any service configuration
-for this credential-free setup.
-```
-
-### Manual setup
-
-Requires Git, Node.js 22.18+ and pnpm 12.18.0. Run in the parent directory where you keep source repositories:
+Prepare the source and dependency store:
 
 ```sh
 git clone https://github.com/FantasticDevHQ/convex-env-sync.git
@@ -59,33 +36,120 @@ pnpm install --frozen-lockfile
 pnpm check
 ```
 
-Expected result: repository checks and the PR/worktree tooling tests pass without cloud accounts or credentials. Authenticated integration tests will be introduced with the implementation. See [development](https://github.com/FantasticDevHQ/convex-env-sync/blob/main/docs/development.md) for lifecycle checks and [the roadmap](https://github.com/FantasticDevHQ/convex-env-sync/blob/main/docs/roadmap.md) for remaining delivery work.
+Pack the candidate and install it in a fresh directory outside the checkout. The offline install reuses the store populated above and disables lifecycle scripts and automatic peer installation:
 
-## Planned behavior
+```sh
+env_sync_artifacts="$(mktemp -d)"
+pnpm pack --pack-destination "$env_sync_artifacts"
+env_sync_consumer="$(mktemp -d)"
+cd "$env_sync_consumer"
+printf '{"private":true,"type":"module"}\n' > package.json
+pnpm add --offline --ignore-scripts --config.auto-install-peers=false \
+  "$env_sync_artifacts/fantastic.dev-convex-env-sync-0.0.0.tgz"
+```
 
-- Select variables in each Doppler config using explicit manifests.
-- Manage Convex project defaults independently for dev, prod and preview.
-- Apply dedicated values to an exact cloud or local deployment.
-- Preserve unrelated variables and require explicit deletion ownership.
-- Reuse the existing Distilled SDKs and Alchemy secret loading.
-- Keep the sync engine independent of its secret source.
+Create an offline plan fixture. These identifiers and values are nonfunctional examples; every provider request is handled in memory:
 
-The APIs implement these rules. Packed consumption is tested outside the source repository; live consumer acceptance remains outstanding.
+```sh
+cat > sync.json <<'JSON'
+{
+  "stages": {
+    "dev": {
+      "kind": "dev",
+      "source": "offline",
+      "target": {
+        "kind": "cloud",
+        "url": "https://example-dev.convex.cloud",
+        "teamId": 1,
+        "projectId": 2,
+        "deploymentId": 3,
+        "deploymentType": "dev"
+      }
+    }
+  }
+}
+JSON
+cat > runtime.mjs <<'JS'
+export function createRuntime() {
+  return {
+    sources: {
+      offline: async () => ({ defaults: { APP_REGION: 'example-region' }, deployment: {} }),
+    },
+    getToken: async () => 'offline-placeholder',
+    fetch: async (input, options = {}) => {
+      const url = new URL(input);
+      if ((options.method ?? 'GET') !== 'GET' || url.origin !== 'https://example-dev.convex.cloud') {
+        throw new Error('Unexpected offline request');
+      }
+      if (url.pathname === '/api/v1/deployment_info') {
+        return Response.json({ kind: 'cloud', id: 3, projectId: 2, teamId: 1, deploymentType: 'dev' });
+      }
+      if (url.pathname === '/api/v1/list_environment_variables') {
+        return Response.json({ environmentVariables: {} });
+      }
+      throw new Error('Unexpected offline endpoint');
+    },
+  };
+}
+JS
+pnpm exec convex-env-sync plan --stage dev --config sync.json --runtime runtime.mjs
+```
+
+The JSON report contains `operations: [{"name":"APP_REGION","operation":"set"}]` and name-only ownership metadata for the synthetic target. It contains neither `example-region` nor the placeholder credential. This fixture makes no network call, provider write or ownership-file write. It verifies the installed CLI and shared planner; it does not establish live provider access.
+
+Core, source, writer and CLI imports work without Alchemy. Install `alchemy@2.0.0-beta.87` when using `@fantastic.dev/convex-env-sync/alchemy`; compatibility with other Alchemy versions is unverified. See [public imports and packed consumption](docs/package.md).
+
+## Configure a real application
+
+Declare exact stage/source/destination mappings using the [configuration guide](docs/configuration.md). The package does not provision deployments. A cloud target includes its HTTPS URL, team, project, deployment ID and matching deployment type. Anonymous local targets use their checkout-owned identity and protected generated keys. Unknown stages fail before credential loading; there is no fallback to production.
+
+In each Doppler config, provide both selection manifests as JSON array strings, including `[]` for an empty group:
+
+```dotenv
+SYNC_CONVEX_DEFAULT_KEYS=["APP_REGION"]
+SYNC_CONVEX_DEPLOYMENT_KEYS=["SITE_URL"]
+```
+
+Selected keys must exist and the two lists must be disjoint. Invalid manifests, duplicate/conflicting names and unavailable selected values fail before writes. Source access tokens, Convex administrative credentials and control variables must not be selected as application values. Explicitly declare overlays or generated overrides for dedicated values such as a preview URL.
+
+Project/type defaults seed new deployments; they are not live inheritance. An existing deployment changes only through an explicitly authorized update. Manage shared defaults separately from individual preview jobs, and authorize propagation to existing deployments separately.
+
+Use trusted runtime callbacks to read fresh source values and load credentials from an existing secret loader or injected environment. Keep values out of config JSON, resource props, logs, snapshots and plaintext state. Plans and ownership metadata contain identities, names and results, never values or value hashes.
+
+Run a read-only plan first. CLI apply requires `--approve` and a target-scoped `--ownership` file, and the operator must have authorization for that exact operation. Use one ownership path per target across cooperating applies. Unrelated keys are retained; deletion requires both prior ownership and an explicit deletion declaration. An omitted selection is not deletion permission. Apply verifies readback in memory before reporting success. Review the [CLI failure, locking and retry rules](docs/cli.md) before applying, and keep production credentials out of untrusted jobs.
+
+## Have my agent set this up
+
+```text
+Use the Convex Env Sync README and consumer guides:
+https://github.com/FantasticDevHQ/convex-env-sync
+https://github.com/FantasticDevHQ/convex-env-sync/blob/main/docs/package.md
+https://github.com/FantasticDevHQ/convex-env-sync/blob/main/docs/configuration.md
+https://github.com/FantasticDevHQ/convex-env-sync/blob/main/docs/cli.md
+
+Read applicable AGENTS.md files, inspect the consuming app and preserve its work.
+Follow the README's unpublished tarball installation and offline CLI plan first.
+Report the installed artifact, commands and name-only expected operations.
+For integration, identify explicit stages, source configs, selection manifests,
+exact destination identities and existing credential loaders. Prepare the app's
+integration PR with its required checks and evidence. Obtain authorization before
+provider writes, provisioning, deployment or publication; the offline setup does
+not authorize those operations. Keep secret values out of source, state and proof.
+```
 
 ## Documentation
 
 - [Architecture and environment rules](docs/architecture.md)
-- [Example configuration and manifests](docs/configuration.md)
-- [Implementation roadmap](https://github.com/FantasticDevHQ/convex-env-sync/blob/main/docs/roadmap.md)
+- [Configuration and manifests](docs/configuration.md)
 - [Alchemy lifecycle and secret-state rules](docs/alchemy.md)
-- [Shared plan/apply CLI](docs/cli.md)
-- [Packed consumption and public imports](docs/package.md)
+- [CLI plan/apply and ownership](docs/cli.md)
+- [Package exports and consumption](docs/package.md)
+- [Roadmap](https://github.com/FantasticDevHQ/convex-env-sync/blob/main/docs/roadmap.md)
 - [Development and worktrees](https://github.com/FantasticDevHQ/convex-env-sync/blob/main/docs/development.md)
-- [PR requirements](https://github.com/FantasticDevHQ/convex-env-sync/blob/main/docs/pull-request-standard.md)
 
 ## Contributing
 
-Read [AGENTS.md](https://github.com/FantasticDevHQ/convex-env-sync/blob/main/AGENTS.md), choose a scoped roadmap task, and run `pnpm check` before opening a PR. The repository is backend-free. Live integration acceptance belongs in an authorized consuming application. Package publication and provider writes require separate authorization.
+Read [AGENTS.md](https://github.com/FantasticDevHQ/convex-env-sync/blob/main/AGENTS.md) and the [PR standard](https://github.com/FantasticDevHQ/convex-env-sync/blob/main/docs/pull-request-standard.md), choose an owning ticket, and run `pnpm check`. This library repository has neither an application backend nor frontend. Live integration acceptance belongs in an authorized consuming application. Publication and provider changes require owner authorization.
 
 ## License
 
