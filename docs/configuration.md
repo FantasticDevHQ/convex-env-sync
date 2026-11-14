@@ -55,7 +55,7 @@ serialize or log it. Only the plan is safe to serialize.
 
 Names must match `[A-Z][A-Z0-9_]*`. Duplicate names, overlap between manifests,
 missing selected values and non-string values fail validation. Empty strings
-are valid values. Names beginning with `DOPPLER_`, `CONVEX_` or `SYNC_CONVEX_`
+are valid values. Names beginning with `DOPPLER_`, `INFISICAL_`, `CONVEX_` or `SYNC_CONVEX_`
 are reserved for credentials and control inputs. Validation errors omit input
 values and JSON parser details. Unselected source values are ignored.
 
@@ -163,3 +163,28 @@ without SDK causes. Tests use synthetic HTTP responses through the real SDK,
 including two simulated local targets. Real anonymous-backend isolation remains
 consumer acceptance work. This backend-free package does not provision a backend
 for its tests.
+
+## Optional Infisical reader
+
+`loadInfisical` from `src/sources/infisical.js` accepts `client`, `projectId`,
+`environment` and an absolute `secretPath`. The caller supplies an authenticated
+[official Infisical SDK client](https://infisical.com/docs/sdks/languages/node).
+The adapter follows the `secrets().listSecrets` contract inspected in
+`@infisical/sdk` 5.3.1. It does not import or install that SDK. A Doppler-only
+consumer resolves no Infisical dependency. Authentication, endpoint configuration
+and client lifecycle belong to the caller and must stay out of persistent
+secret-bearing resource inputs.
+
+Both `SYNC_CONVEX_DEFAULT_KEYS` and `SYNC_CONVEX_DEPLOYMENT_KEYS` must exist in the
+selected environment/folder as JSON array strings. The result is the same
+secret-bearing `{ defaults, deployment }` input used by Doppler. Reference
+expansion is enabled, imports and recursion are disabled, values are requested
+unmasked, and process-environment attachment is explicitly disabled. Hidden or
+missing selected values, duplicate response keys and malformed selections fail.
+No environment or folder fallback occurs. Errors omit SDK causes and response
+contents. The adapter does not log, persist state or call destination updates.
+Configure caller-owned clients without secret logging or persistent value caches.
+
+Tests use the SDK's response shape and a caller-supplied test client, compare the
+result with Doppler's real-SDK HTTP-boundary output, and run Doppler under an
+import hook that rejects Infisical resolution. No live account access is claimed.

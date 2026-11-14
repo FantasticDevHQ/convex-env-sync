@@ -1,4 +1,4 @@
-const forbidden = /^(?:DOPPLER_|CONVEX_|SYNC_CONVEX_)/;
+const forbidden = /^(?:DOPPLER_|INFISICAL_|CONVEX_|SYNC_CONVEX_)/;
 
 function manifest(value) {
   let names;
