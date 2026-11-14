@@ -9,4 +9,4 @@ The source-checkout `core/manifest.js` and `core/plan.js` modules implement sele
 - `alchemy/index.js`: pinned Alchemy resource/provider with fresh sync on every apply, dependency ordering and metadata-only state.
 - `cli/main.js`: source-checkout plan/apply command, lazy runtime loading and verified metadata persistence.
 
-Package entrypoints are not shipped yet. The Doppler adapter pins Distilled and Effect runtime dependencies. See [the architecture](../docs/architecture.md).
+Public ESM entrypoints and packed-consumer checks are described in [package consumption](../docs/package.md). The Doppler adapter pins Distilled and Effect runtime dependencies. See [the architecture](../docs/architecture.md).

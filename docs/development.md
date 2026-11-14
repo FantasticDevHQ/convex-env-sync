@@ -7,7 +7,7 @@ pnpm install --frozen-lockfile
 pnpm check
 ```
 
-`pnpm check` runs core and source-adapter tests, verifies scaffold integrity and runs the PR validator/enforcer and worktree unit/freshness tests. It does not contact Doppler or Convex, or prove real secret delivery. No application backend or frontend exists in this repository.
+`pnpm check` runs core and source-adapter tests, verifies scaffold integrity and runs the PR validator/enforcer and worktree unit/freshness tests. It does not contact Doppler or Convex, or prove real secret delivery. No application backend or frontend exists in this repository. Packed-consumer checks use the populated pnpm store offline, including the pinned optional Alchemy peer; run the frozen install before checks. See [package consumption](package.md).
 
 ## Backend-free lifecycle
 

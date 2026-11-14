@@ -21,7 +21,7 @@
 
 Convex Env Sync is being built to deliver selected secrets from Doppler to Convex project defaults and individual deployments through Alchemy. It is intended for existing Convex applications, including pnpm Turborepos, with development, production and preview deployments.
 
-**Status: unpublished implementation in progress.** Source-checkout modules provide selection, ownership, Doppler and optional Infisical readers, scoped Convex writers, Alchemy lifecycle integration and a shared plan/apply CLI. No npm release or live consumer verification has been delivered.
+**Status: unpublished implementation in progress.** Source-checkout modules provide selection, ownership, Doppler and optional Infisical readers, scoped Convex writers, Alchemy lifecycle integration and a shared plan/apply CLI. A local tarball supports prerelease evaluation. No npm release or live consumer verification has been delivered.
 
 ## Quick start
 
@@ -59,7 +59,7 @@ pnpm install --frozen-lockfile
 pnpm check
 ```
 
-Expected result: repository checks and the PR/worktree tooling tests pass without cloud accounts or credentials. Authenticated integration tests will be introduced with the implementation. See [development](docs/development.md) for lifecycle checks and [the roadmap](docs/roadmap.md) for remaining delivery work.
+Expected result: repository checks and the PR/worktree tooling tests pass without cloud accounts or credentials. Authenticated integration tests will be introduced with the implementation. See [development](https://github.com/FantasticDevHQ/convex-env-sync/blob/main/docs/development.md) for lifecycle checks and [the roadmap](https://github.com/FantasticDevHQ/convex-env-sync/blob/main/docs/roadmap.md) for remaining delivery work.
 
 ## Planned behavior
 
@@ -70,21 +70,22 @@ Expected result: repository checks and the PR/worktree tooling tests pass withou
 - Reuse the existing Distilled SDKs and Alchemy secret loading.
 - Keep the sync engine independent of its secret source.
 
-Source-checkout APIs implement these rules. Packed consumption and live consumer acceptance remain outstanding.
+The APIs implement these rules. Packed consumption is tested outside the source repository; live consumer acceptance remains outstanding.
 
 ## Documentation
 
 - [Architecture and environment rules](docs/architecture.md)
 - [Example configuration and manifests](docs/configuration.md)
-- [Implementation roadmap](docs/roadmap.md)
+- [Implementation roadmap](https://github.com/FantasticDevHQ/convex-env-sync/blob/main/docs/roadmap.md)
 - [Alchemy lifecycle and secret-state rules](docs/alchemy.md)
 - [Shared plan/apply CLI](docs/cli.md)
-- [Development and worktrees](docs/development.md)
-- [PR requirements](docs/pull-request-standard.md)
+- [Packed consumption and public imports](docs/package.md)
+- [Development and worktrees](https://github.com/FantasticDevHQ/convex-env-sync/blob/main/docs/development.md)
+- [PR requirements](https://github.com/FantasticDevHQ/convex-env-sync/blob/main/docs/pull-request-standard.md)
 
 ## Contributing
 
-Read [AGENTS.md](AGENTS.md), choose a scoped roadmap task, and run `pnpm check` before opening a PR. The repository is backend-free. Live integration acceptance belongs in an authorized consuming application. Package publication and provider writes require separate authorization.
+Read [AGENTS.md](https://github.com/FantasticDevHQ/convex-env-sync/blob/main/AGENTS.md), choose a scoped roadmap task, and run `pnpm check` before opening a PR. The repository is backend-free. Live integration acceptance belongs in an authorized consuming application. Package publication and provider writes require separate authorization.
 
 ## License
 
