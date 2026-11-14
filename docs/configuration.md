@@ -61,3 +61,33 @@ values and JSON parser details. Unselected source values are ignored.
 
 Explicit overlays, destination identities, ownership, deletion and drift
 reconciliation remain subsequent roadmap work.
+
+## Ownership-aware reconciliation
+
+`reconcile` from `src/core/reconcile.js` accepts an exact non-secret `target`
+identity, complete string-valued `desired` and `actual` records, optional
+`ownership`, and an explicit `deletions` array. The provider adapter must resolve
+and verify that identity before writing. This pure function has no provider calls.
+Await and validate source reads first. Never substitute `{}` for a failed read.
+Undefined, error objects, non-string records and unsupported ownership versions
+are rejected.
+
+The result has `operations` containing sorted `{ name, operation }` records,
+where `operation` is `set` or `delete`, and candidate `ownership` with only
+`target`, `managedNames` and `syncVersion: 1`. Neither result contains values or
+value hashes. The desired/actual input records remain secret-bearing in memory.
+Writers construct a sparse change set from the operations and desired values,
+then verify readback before persisting candidate ownership. A plan is not proof
+that any values have been applied.
+
+Selected names acquire ownership, including an already-equal value. Unrelated
+and omitted names produce no operation. Previously owned names remain tracked
+when omitted, so omission alone never deletes or relinquishes ownership. A delete
+requires a previously owned name for the same target, explicit declaration, and
+absence from desired values. If an explicitly deleted owned key is already
+absent, no write is needed and candidate ownership drops that name. To delete a
+selected key, remove it from the desired selection and declare the deletion.
+
+Ownership is an authorization input supplied by the trusted consumer. Do not
+accept an untrusted PR's claimed ownership metadata as authority to delete keys.
+Provider writers and lifecycle persistence are subsequent roadmap work.

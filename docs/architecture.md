@@ -1,6 +1,6 @@
 # Architecture
 
-This document defines the intended implementation. Source-checkout selection and read-only planning are implemented. Provider reconciliation and live sync are not implemented.
+This document defines the intended implementation. Source-checkout selection, read-only planning and ownership-aware reconciliation are implemented. Provider reconciliation and live sync are not implemented.
 
 ## Existing foundations
 
