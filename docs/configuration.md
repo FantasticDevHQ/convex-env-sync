@@ -210,7 +210,9 @@ their values; defaults are not live inheritance.
 
 Optional `propagation` requires `authorized: true` and an explicit `targets`
 array. Each entry has an exact cloud `target` in the same project/team/type,
-optional string-valued `overrides`, and its own ownership/deletions. The helper
+optional string-valued `overrides`, and its own ownership/deletions. An explicit
+`overrides: null` is rejected as unavailable source data, not treated as an empty
+overlay. The helper
 combines the complete desired baseline with these declared overrides, preflights
 every destination before any mutation, then reconciles only the listed targets
 through `applyDeployment`. Duplicate deployments and cross-project/type targets

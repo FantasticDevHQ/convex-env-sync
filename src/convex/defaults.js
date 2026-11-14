@@ -58,7 +58,7 @@ async function prepare(input) {
       if (destination.kind !== 'cloud' || destination.teamId !== target.teamId || destination.projectId !== target.projectId ||
           destination.deploymentType !== target.deploymentType || seen.has(destination.deploymentId)) throw new Error('Invalid propagation target');
       seen.add(destination.deploymentId);
-      const overrides = entry.overrides ?? {};
+      const overrides = entry.overrides === undefined ? {} : entry.overrides;
       reconcile({ target: deploymentIdentity(destination), desired: overrides, actual: {} });
       const values = { ...desired, ...overrides };
       reconcile({ target: deploymentIdentity(destination), desired: values, actual: {}, ownership: entry.ownership, deletions: entry.deletions });

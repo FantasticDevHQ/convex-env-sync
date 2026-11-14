@@ -101,6 +101,7 @@ test('unapproved propagation, wrong project/type, source errors and bulk overwri
   for (const overrides of [
     { desired: new Error('synthetic-source-error') },
     { applyToExistingDeployments: true },
+    { propagation: { authorized: true, targets: [{ target: deployment, overrides: null }] } },
     { propagation: { targets: [{ target: deployment }] } },
     { propagation: { authorized: true, targets: [{ target: { ...deployment, deploymentType: 'prod' } }] } },
     { propagation: { authorized: true, targets: [{ target: { ...deployment, projectId: 99 } }] } },
