@@ -1,13 +1,13 @@
 # Development
 
-Requires Node.js 22.18+ and pnpm 12.18.0. Native TypeScript stripping is used only by the vendored worktree tooling. The sync implementation and runtime SDK dependencies will be introduced by the roadmap tasks.
+Requires Node.js 22.18+ and pnpm 12.18.0. Native TypeScript stripping is used only by the vendored worktree tooling. Core selection and planning use dependency-free JavaScript ES modules. Runtime SDK dependencies will be introduced by subsequent roadmap tasks.
 
 ```sh
 pnpm install --frozen-lockfile
 pnpm check
 ```
 
-`pnpm check` verifies scaffold integrity and runs the PR validator/enforcer and worktree unit/freshness tests. It does not contact Doppler or Convex, or prove real secret delivery. No application backend or frontend exists in this repository.
+`pnpm check` runs core manifest/plan tests, verifies scaffold integrity and runs the PR validator/enforcer and worktree unit/freshness tests. It does not contact Doppler or Convex, or prove real secret delivery. No application backend or frontend exists in this repository.
 
 ## Backend-free lifecycle
 

@@ -1,6 +1,6 @@
 # Architecture
 
-This document defines the intended implementation. The scaffold has no runtime sync API.
+This document defines the intended implementation. Source-checkout selection and read-only planning are implemented. Provider reconciliation and live sync are not implemented.
 
 ## Existing foundations
 

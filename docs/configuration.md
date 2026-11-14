@@ -1,6 +1,6 @@
 # Proposed configuration
 
-All shapes below are design examples. No `defineSync`, `plan`, or `apply` API is implemented yet.
+The provider configuration below remains a design example. Source-checkout selection and read-only planning are implemented as described next. No provider apply API is implemented yet.
 
 Each consuming application declares its Convex project, backend directory, Doppler project and config mapping. A Turborepo can declare multiple independent application targets. No workspace layout is hardcoded by the engine.
 
@@ -39,3 +39,25 @@ Defaults keys are written to the selected project/type and are also part of the 
 For a dedicated PR source config, resolve that config as an explicit overlay on the preview baseline. Generated inputs, such as a PR URL or local auth identity, must name the variables they override. A future Infisical adapter maps its environment/folder selection to the same defaults and override structure.
 
 Doppler project tags may be used for project discovery only. They are not individual-secret routing metadata. Reference: [Doppler project tags](https://docs.doppler.com/docs/tags).
+
+## Read-only source-checkout API
+
+Import `plan` from `src/core/plan.js`. It accepts an in-memory `source` record
+of string values and `selection` with `defaults` and `deployment` JSON array
+strings. Both manifests are required, including explicit `[]` for an empty list.
+It returns separate `defaults` and `deployment` arrays of `{ name, operation:
+'set' }`, sorted by name. It does not read a provider, observe current values,
+authorize an apply, or imply that defaults propagate to existing deployments.
+
+`selectValues` in `src/core/manifest.js` returns the selected string records for
+future adapters. Its return value contains secrets. Keep it in memory and never
+serialize or log it. Only the plan is safe to serialize.
+
+Names must match `[A-Z][A-Z0-9_]*`. Duplicate names, overlap between manifests,
+missing selected values and non-string values fail validation. Empty strings
+are valid values. Names beginning with `DOPPLER_`, `CONVEX_` or `SYNC_CONVEX_`
+are reserved for credentials and control inputs. Validation errors omit input
+values and JSON parser details. Unselected source values are ignored.
+
+Explicit overlays, destination identities, ownership, deletion and drift
+reconciliation remain subsequent roadmap work.
