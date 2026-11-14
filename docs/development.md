@@ -35,7 +35,7 @@ The optional real Convex integration test is not part of this backend-free repos
 
 ## CI
 
-GitHub Actions schedules `Repository quality gates` on `ubicloud-standard-2-ubuntu-2404`. The UbiCloud GitHub installation must include this repository and Actions must be enabled. Inspect actual job labels, runner name and conclusion before claiming UbiCloud execution passed. Never fall back to GitHub-hosted compute.
+GitHub Actions schedules `Repository quality gates` on `ubicloud-standard-2-ubuntu-2404`. The UbiCloud GitHub installation must include this repository and Actions must be enabled. Inspect actual job labels, runner name and conclusion before claiming UbiCloud execution passed. The owner approved a publishing-only GitHub-hosted `ubuntu-24.04` job for npm OIDC/provenance in `release.yml`; ordinary CI and exact-tag release verification remain on UbiCloud. Do not broaden that exception or add credential/provider fallbacks.
 
 The PR metadata workflow executes trusted base code with write permissions, without installing dependencies or checking out PR head code. It activates automatically after these files land on the default branch. Before that, validate actual PR metadata locally. Required merge protection is a separate repository setting; verify it after real contexts exist.
 

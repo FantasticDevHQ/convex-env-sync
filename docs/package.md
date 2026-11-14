@@ -1,6 +1,6 @@
 # Package consumption and release checks
 
-Install the public package in your application with `npm install @fantastic.dev/convex-env-sync@0.1.0` or `pnpm add @fantastic.dev/convex-env-sync@0.1.0`. Node.js 22.18+ is required. Runtime modules are JavaScript ES modules; TypeScript declarations and CommonJS entrypoints are not provided.
+Install the public package in your application with `npm install @fantastic.dev/convex-env-sync` or `pnpm add @fantastic.dev/convex-env-sync`. Node.js 22.18+ is required. Runtime modules are JavaScript ES modules; TypeScript declarations and CommonJS entrypoints are not provided.
 
 ## Maintainer candidate checks
 
@@ -11,6 +11,7 @@ From the source checkout, install pinned dependencies and verify it:
 ```sh
 pnpm install --frozen-lockfile
 pnpm check
+env_sync_version="$(node -p "require('./package.json').version")"
 pnpm pack --pack-destination /tmp/convex-env-sync-artifacts
 ```
 
@@ -18,7 +19,7 @@ Install the resulting tarball into an existing consumer. Adjust its path to the
 actual output from pack:
 
 ```sh
-pnpm add /tmp/convex-env-sync-artifacts/fantastic.dev-convex-env-sync-0.1.0.tgz
+pnpm add "/tmp/convex-env-sync-artifacts/fantastic.dev-convex-env-sync-${env_sync_version}.tgz"
 ```
 
 Keep the dependency and lockfile together. Repack after source changes; a tarball

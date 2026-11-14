@@ -29,7 +29,7 @@ test('packed artifact works in an isolated offline consumer and excludes private
   const consumer = join(dir, 'consumer');
   await mkdir(packRoot);
   await mkdir(consumer);
-  for (const file of ['package.json', 'README.md', 'LICENSE', 'src', 'docs', 'assets']) {
+  for (const file of ['package.json', 'README.md', 'LICENSE', 'CHANGELOG.md', 'src', 'docs', 'assets']) {
     await cp(join(root, file), join(packRoot, file), { recursive: true });
   }
   // Deliberate synthetic contamination tests the packaging boundary, never secrets.
@@ -48,7 +48,7 @@ test('packed artifact works in an isolated offline consumer and excludes private
     assert.ok(files.includes('src/cli/main.js'));
     assert.ok(files.includes('assets/fantastic-dev-logo.svg'));
     for (const file of files) {
-      assert.match(file, /^(?:package\.json|README\.md|LICENSE|assets\/fantastic-dev-logo\.svg|src\/(?:README\.md|index\.js|(?:core|convex|sources|alchemy|cli)\/[a-z-]+\.js)|docs\/[a-z-]+\.md)$/);
+      assert.match(file, /^(?:package\.json|README\.md|LICENSE|CHANGELOG\.md|assets\/fantastic-dev-logo\.svg|src\/(?:README\.md|index\.js|(?:core|convex|sources|alchemy|cli)\/[a-z-]+\.js)|docs\/[a-z-]+\.md)$/);
     }
     const unpacked = join(dir, 'audit');
     await mkdir(unpacked);

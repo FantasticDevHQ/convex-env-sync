@@ -8,6 +8,10 @@ Reuse @distilled.cloud/convex and @distilled.cloud/doppler, and Alchemy's existi
 
 Keep worktree implementation/tests under scripts/worktree/. This repository has neither an application backend nor frontend. Never provision a Convex backend just to test this library. Maintain upstream provenance when updating vendored tooling.
 
-CI uses UbiCloud, with `ubicloud-standard-2-ubuntu-2404` as default. Preserve trusted base execution for the write-token PR workflow. Follow docs/pull-request-standard.md and the PR template; evidence belongs in PRs, never committed evidence files.
+Ordinary CI and release verification use UbiCloud, with `ubicloud-standard-2-ubuntu-2404` as default. The owner approved only the npm OIDC/provenance publishing job in release.yml on GitHub-hosted `ubuntu-24.04`; no other hosted-runner exception is granted. Preserve trusted base execution for the write-token PR workflow. Follow docs/pull-request-standard.md and the PR template; evidence belongs in PRs, never committed evidence files.
 
 Independent final-commit acceptance review uses GPT-6.1 Terra with medium reasoning. Obtain a fresh review after material changes. Do not merge, publish packages, apply remote environment changes, or deploy without the user's authorization.
+
+## Generated releases
+
+The owner approved Better Stripe-style auto-merge for metadata-only Release Please PRs from the existing FantasticDev npm releases App after protected checks. Those generated PRs need no new per-version Linear ticket or Terra acceptance, but retain the five PR sections and actual workflow identity. Trusted-base validation restricts them to a consistent version/manifest increase, appended changelog and README version text. Source-changing PRs retain normal ticket and independent final-commit review requirements. See docs/releasing.md; repository settings and npm publisher binding must be verified separately from code.

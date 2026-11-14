@@ -174,9 +174,9 @@ function uiEvidenceErrors(text, files) {
   return errors;
 }
 
-export function validatePullRequest({ title = "", body = "" }, files = []) {
+export function validatePullRequest({ title = "", body = "" }, files = [], { ticketRequired = true } = {}) {
   const errors = [];
-  if (!titlePattern.test(title.trim()))
+  if (ticketRequired && !titlePattern.test(title.trim()))
     errors.push(
       "Use `type(scope): TICKET-123 description` or `type: TICKET-123 description`. Types: feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert. Example: `fix(auth): JIF-65 correct session expiry`.",
     );
@@ -195,7 +195,7 @@ export function validatePullRequest({ title = "", body = "" }, files = []) {
       );
     if (matches.length === 1 && name === "Agent")
       errors.push(...agentErrors(matches[0].text));
-    if (matches.length === 1 && name === "Summary")
+    if (matches.length === 1 && name === "Summary" && ticketRequired)
       errors.push(...linkageErrors(matches[0].text, title));
     if (matches.length === 1 && name === "Evidence")
       errors.push(...uiEvidenceErrors(matches[0].text, files));
