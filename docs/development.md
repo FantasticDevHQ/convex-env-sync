@@ -40,3 +40,12 @@ GitHub Actions schedules `Repository quality gates` on `ubicloud-standard-2-ubun
 The PR metadata workflow executes trusted base code with write permissions, without installing dependencies or checking out PR head code. It activates automatically after these files land on the default branch. Before that, validate actual PR metadata locally. Required merge protection is a separate repository setting; verify it after real contexts exist.
 
 Keep PR evidence in the PR. Independent acceptance review uses GPT-6.1 Terra with medium reasoning on the final commit. Do not merge, publish or change live environments without owner authorization.
+
+## Test scheduling
+
+`pnpm check` runs test files sequentially. Vendored lifecycle suites each use
+private registries but share the host port pool; simultaneous suites can claim
+the same otherwise-free port between setup calls. Serial file execution keeps
+those fixtures independent. The toolkit's explicit parallel-allocation tests
+still run their concurrent setup operations and verify locking within a shared
+registry. Vendored tooling and its provenance remain unchanged.
