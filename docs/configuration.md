@@ -1,6 +1,6 @@
 # Proposed configuration
 
-The provider configuration below remains a design example. Source-checkout selection and read-only planning are implemented as described next. No provider apply API is implemented yet.
+The provider configuration below remains a design example. Source-checkout selection, planning, exact deployment apply and project defaults are implemented in the modules documented below. A packaged configuration API, CLI and Alchemy adapter are not implemented yet.
 
 Each consuming application declares its Convex project, backend directory, Doppler project and config mapping. A Turborepo can declare multiple independent application targets. No workspace layout is hardcoded by the engine.
 
