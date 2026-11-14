@@ -40,5 +40,8 @@
     "alchemy": {
       "optional": true
     }
+  },
+  "bin": {
+    "convex-env-sync": "./src/cli/main.js"
   }
 }

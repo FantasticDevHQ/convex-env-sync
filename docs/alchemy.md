@@ -2,8 +2,8 @@
 
 The source-checkout adapter is implemented in `src/alchemy/index.js` and verified
 against Alchemy 2.0.0-beta.87 with Effect 4.1.4. Alchemy is an optional peer, so
-core and provider-only consumers do not need it. There is no published package
-or CLI yet.
+core and provider-only consumers do not need it. The [source-checkout CLI](cli.md) shares the pipeline. There is no published
+package yet.
 
 ## Stage mapping and runtime loaders
 

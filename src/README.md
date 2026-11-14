@@ -7,6 +7,6 @@ The source-checkout `core/manifest.js` and `core/plan.js` modules implement sele
 - `sources/infisical.js`: optional caller-owned SDK client adapter with the same selection contract.
 - `convex/deployment.js`: exact deployment planning, scoped bulk updates and readback through Distilled. The defaults module handles project/type updates and explicit verified propagation.
 - `alchemy/index.js`: pinned Alchemy resource/provider with fresh sync on every apply, dependency ordering and metadata-only state.
-- `cli/`: plan, apply and verification commands using the same engine.
+- `cli/main.js`: source-checkout plan/apply command, lazy runtime loading and verified metadata persistence.
 
 Package entrypoints are not shipped yet. The Doppler adapter pins Distilled and Effect runtime dependencies. See [the architecture](../docs/architecture.md).
