@@ -25,6 +25,7 @@
     "worktree:prune": "node scripts/worktree/cli.mts prune"
   },
   "dependencies": {
+    "@distilled.cloud/convex": "1.0.0-rc.20",
     "@distilled.cloud/doppler": "1.0.0-rc.20",
     "effect": "4.1.4"
   }
