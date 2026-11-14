@@ -40,16 +40,16 @@ For a dedicated PR source config, resolve that config as an explicit overlay on 
 
 Doppler project tags may be used for project discovery only. They are not individual-secret routing metadata. Reference: [Doppler project tags](https://docs.doppler.com/docs/tags).
 
-## Read-only source-checkout API
+## Read-only planning API
 
-Import `plan` from `src/core/plan.js`. It accepts an in-memory `source` record
+Import `plan` from `@fantastic.dev/convex-env-sync`. It accepts an in-memory `source` record
 of string values and `selection` with `defaults` and `deployment` JSON array
 strings. Both manifests are required, including explicit `[]` for an empty list.
 It returns separate `defaults` and `deployment` arrays of `{ name, operation:
 'set' }`, sorted by name. It does not read a provider, observe current values,
 authorize an apply, or imply that defaults propagate to existing deployments.
 
-`selectValues` in `src/core/manifest.js` returns the selected string records for
+`selectValues` from `@fantastic.dev/convex-env-sync` returns the selected string records for
 source adapters. Its return value contains secrets. Keep it in memory and never
 serialize or log it. Only the plan is safe to serialize.
 
@@ -66,7 +66,7 @@ Ownership-aware reconciliation is described in the next section.
 
 ## Ownership-aware reconciliation
 
-`reconcile` from `src/core/reconcile.js` accepts an exact non-secret `target`
+`reconcile` from `@fantastic.dev/convex-env-sync` accepts an exact non-secret `target`
 identity, complete string-valued `desired` and `actual` records, optional
 `ownership`, and an explicit `deletions` array. The provider adapter must resolve
 and verify that identity before writing. This pure function has no provider calls.
@@ -96,9 +96,9 @@ The deployment/defaults writers below apply and verify sparse changes. The
 [CLI](cli.md) persists verified name-only ownership atomically; the
 [Alchemy adapter](alchemy.md) retains metadata-only lifecycle state.
 
-## Doppler source-checkout reader
+## Doppler reader
 
-`loadDoppler` from `src/sources/doppler.js` accepts explicit `project`, `config`
+`loadDoppler` from `@fantastic.dev/convex-env-sync/sources/doppler` accepts explicit `project`, `config`
 and `token` strings and returns the same secret-bearing `{ defaults, deployment }`
 records as `selectValues`. Supply credentials in memory from the caller's secret
 loader. Never pass them to persistent resource inputs or log the result.
@@ -123,8 +123,8 @@ live Doppler access or Convex delivery.
 
 ## Exact Convex deployment operations
 
-`planDeployment`, `applyDeployment` and `deploymentIdentity` are source-checkout
-exports from `src/convex/deployment.js`. Supply a flat, complete `desired` record
+`planDeployment`, `applyDeployment` and `deploymentIdentity` are
+exports from `@fantastic.dev/convex-env-sync/convex/deployment`. Supply a flat, complete `desired` record
 of selected application strings, an in-memory `token`, optional target-scoped
 `ownership` and explicit `deletions`. The caller finishes source loading before
 invoking these operations. Neither function provisions a deployment or updates

@@ -1,12 +1,11 @@
 # Shared command interface
 
-The source-checkout command uses the same `runStage` pipeline as the Alchemy
-provider. It requires Node.js 22.18+ and installed pinned dependencies. No npm
-release is published yet.
+The installed command uses the same `runStage` pipeline as the Alchemy
+provider. It requires Node.js 22.18+ and the installed npm package.
 
 ```sh
-node src/cli/main.js plan --stage preview --config sync.json --runtime sync-runtime.mjs
-node src/cli/main.js apply --stage preview --config sync.json --runtime sync-runtime.mjs --ownership .worktree/env-sync-ownership.json --approve
+npx --no-install convex-env-sync plan --stage preview --config sync.json --runtime sync-runtime.mjs
+npx --no-install convex-env-sync apply --stage preview --config sync.json --runtime sync-runtime.mjs --ownership .worktree/env-sync-ownership.json --approve
 ```
 
 Apply requires both `--approve` and an explicit ownership file. Approval is an
@@ -46,11 +45,11 @@ module. Unknown stages therefore cannot execute runtime authentication code.
 The module exports `createRuntime({ stage, kind, target, mode })`, returning the
 same runtime-only source and credential callbacks as `syncProvider`.
 
-This root-level source-checkout example reads credentials from the caller's
+This installed-consumer example reads credentials from the caller's
 injected environment only when its callback runs:
 
 ```js
-import { loadDoppler } from './src/sources/doppler.js';
+import { loadDoppler } from '@fantastic.dev/convex-env-sync/sources/doppler';
 
 export function createRuntime() {
   return {
