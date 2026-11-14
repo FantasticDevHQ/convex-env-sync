@@ -1,13 +1,13 @@
 # Development
 
-Requires Node.js 22.18+ and pnpm 12.18.0. Native TypeScript stripping is used only by the vendored worktree tooling. Core selection and planning use dependency-free JavaScript ES modules. Runtime SDK dependencies will be introduced by subsequent roadmap tasks.
+Requires Node.js 22.18+ and pnpm 12.18.0. Native TypeScript stripping is used only by the vendored worktree tooling. Core selection and planning use dependency-free JavaScript ES modules. The Doppler adapter pins `@distilled.cloud/doppler` 1.0.0-rc.20 and Effect 4.1.4. Tests intercept HTTP at the fetch boundary while exercising the real SDK.
 
 ```sh
 pnpm install --frozen-lockfile
 pnpm check
 ```
 
-`pnpm check` runs core manifest/plan tests, verifies scaffold integrity and runs the PR validator/enforcer and worktree unit/freshness tests. It does not contact Doppler or Convex, or prove real secret delivery. No application backend or frontend exists in this repository.
+`pnpm check` runs core and source-adapter tests, verifies scaffold integrity and runs the PR validator/enforcer and worktree unit/freshness tests. It does not contact Doppler or Convex, or prove real secret delivery. No application backend or frontend exists in this repository.
 
 ## Backend-free lifecycle
 

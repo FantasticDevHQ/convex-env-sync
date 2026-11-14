@@ -23,5 +23,9 @@
     "worktree:teardown": "node scripts/worktree/cli.mts teardown",
     "worktree:cleanup": "node scripts/worktree/cli.mts cleanup",
     "worktree:prune": "node scripts/worktree/cli.mts prune"
+  },
+  "dependencies": {
+    "@distilled.cloud/doppler": "1.0.0-rc.20",
+    "effect": "4.1.4"
   }
 }

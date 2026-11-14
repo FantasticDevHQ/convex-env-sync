@@ -164,4 +164,39 @@ settings:
 
 importers:
 
-  .: {}
+  .:
+    dependencies:
+      '@distilled.cloud/doppler':
+        specifier: 1.0.0-rc.20
+        version: 1.0.0-rc.20(effect@4.1.4)
+      effect:
+        specifier: 4.1.4
+        version: 4.1.4
+
+packages:
+
+  '@distilled.cloud/core@1.0.0-rc.20':
+    resolution: {integrity: sha512-uoZ8W5QhxcSyyM6/XZzRJCKc55FC4fZfXWX2ypx8AOIC4PTOtdyDZ3fswGpVp/SRiC4ua0HYGhAgFA8Ub7Ot5Q==}
+    peerDependencies:
+      effect: ^4.1.2
+
+  '@distilled.cloud/doppler@1.0.0-rc.20':
+    resolution: {integrity: sha512-ER+F76Qdm59D/6R7bejxVotmXdEWj89esvz6ztTVviN7Zq6dkSrU7y6KicNO1KnPF8qVbWL46luKeNmYHNZbBA==}
+    peerDependencies:
+      effect: ^4.1.2
+
+  effect@4.1.4:
+    resolution: {integrity: sha512-Tgrv/9FN+TZYyOn8XSli+fVqAfwDrDAkiX5Uu9vztINb675VTQdhD0gWI5Kzvhlh9QqzjZvw72iugqw5pwoghQ==}
+
+snapshots:
+
+  '@distilled.cloud/core@1.0.0-rc.20(effect@4.1.4)':
+    dependencies:
+      effect: 4.1.4
+
+  '@distilled.cloud/doppler@1.0.0-rc.20(effect@4.1.4)':
+    dependencies:
+      '@distilled.cloud/core': 1.0.0-rc.20(effect@4.1.4)
+      effect: 4.1.4
+
+  effect@4.1.4: {}
