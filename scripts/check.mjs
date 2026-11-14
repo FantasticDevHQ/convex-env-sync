@@ -23,7 +23,9 @@ for (const name of ['README.md', 'LICENSE', 'AGENTS.md', 'docs/architecture.md',
 const tests = readdirSync(new URL('./worktree/', import.meta.url))
   .filter((name) => name.endsWith('.test.mts'))
   .map((name) => `scripts/worktree/${name}`);
-tests.push('src/core/manifest.test.mjs', 'src/core/plan.test.mjs', 'src/core/reconcile.test.mjs', 'src/sources/doppler.test.mjs');
+tests.push(...readdirSync(new URL('../src/', import.meta.url), { recursive: true })
+  .filter((name) => name.endsWith('.test.mjs'))
+  .map((name) => `src/${name}`));
 tests.push('scripts/pr-standard.test.mjs', 'scripts/enforce-pr-standard.test.mjs');
 const result = spawnSync(process.execPath, ['--test', ...tests], {
   cwd: root, stdio: 'inherit',
