@@ -123,7 +123,7 @@ of selected application strings, an in-memory `token`, optional target-scoped
 invoking these operations. Neither function provisions a deployment or updates
 project defaults.
 
-Cloud targets require `kind: 'cloud'`, an HTTPS `url` under `convex.cloud`,
+Cloud targets require `kind: 'cloud'`, an HTTPS `url` under `convex.cloud`, including regional subdomains,
 positive numeric `teamId`, `projectId` and `deploymentId`, and an explicit
 `deploymentType` of `dev`, `prod` or `preview`. The authenticated Distilled
 `getDeploymentInfo` response must match every identifier and type.

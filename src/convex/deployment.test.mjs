@@ -145,3 +145,10 @@ test('SDK response failures are sanitized without logs', async (t) => {
   });
   for (const log of logs) assert.equal(log.mock.calls.length, 0);
 });
+
+test('regional Convex cloud deployment URLs are accepted with the same identity checks', async () => {
+  const regional = { ...cloud, url: 'https://example-preview.eu-west-1.convex.cloud' };
+  const f = fixture([regional]);
+  await applyDeployment({ target: regional, token, desired: { TOKEN: 'new-synthetic-value' }, fetch: f.fetch });
+  assert.equal(f.state.get(regional.url).writes.length, 1);
+});

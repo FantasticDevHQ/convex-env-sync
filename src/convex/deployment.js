@@ -7,7 +7,7 @@ function validateTarget(target) {
   const url = new URL(target.url);
   if (url.username || url.password || url.search || url.hash || url.pathname !== '/') throw new Error('Invalid deployment URL');
   if (target.kind === 'cloud') {
-    if (url.protocol !== 'https:' || !/^[a-z0-9-]+\.convex\.cloud$/.test(url.hostname) || url.port ||
+    if (url.protocol !== 'https:' || !/^(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+convex\.cloud$/.test(url.hostname) || url.port ||
         ![target.teamId, target.projectId, target.deploymentId].every((id) => Number.isSafeInteger(id) && id > 0) ||
         !['dev', 'prod', 'preview'].includes(target.deploymentType)) throw new Error('Invalid cloud identity');
     return { kind: 'cloud', url: url.origin, teamId: target.teamId, projectId: target.projectId, deploymentId: target.deploymentId, deploymentType: target.deploymentType };
