@@ -1,6 +1,6 @@
 # Configuration
 
-The application inventory below is illustrative, not the CLI configuration schema. Use the exact stage mappings in the CLI or Alchemy guides for executable configuration. Source-checkout selection, planning, exact deployment apply and project defaults are implemented in the modules documented below. The Alchemy adapter uses the stage pipeline described in [Alchemy lifecycle](alchemy.md). The [CLI](cli.md) uses the same validated mappings. Public ESM exports and external packed-consumer verification are described in [package consumption](package.md). Independent consumer acceptance covers local isolation, cloud development apply/rotation, preview initialization/override preservation and read-only development planning. The package is available on npm; see the [README](../README.md) for released versions. Live production verification remains outstanding.
+Alchemy is optional: the standalone CLI and JavaScript API use the same engine and configuration contracts. The application inventory below is illustrative, not the CLI configuration schema. Use the exact stage mappings in the CLI or Alchemy guides for executable configuration. Source-checkout selection, planning, exact deployment apply and project defaults are implemented in the modules documented below. The optional [Alchemy adapter](alchemy.md) also uses this stage pipeline. The [CLI](cli.md) uses the same validated mappings. Public ESM exports and external packed-consumer verification are described in [package consumption](package.md). Independent consumer acceptance covers local isolation, cloud development apply/rotation, preview initialization/override preservation and read-only development planning. The package is available on npm; see the [README](../README.md) for released versions. Live production verification remains outstanding.
 
 Each consuming application declares its Convex project, backend directory, Doppler project and config mapping. A Turborepo can declare multiple independent application targets. No workspace layout is hardcoded by the engine.
 
@@ -22,6 +22,52 @@ const configuration = {
 ```
 
 Config names are user-defined. A missing preview config is an error, not permission to read production. Production, cloud development, local anonymous development and preview deployment identities are resolved explicitly by the consumer workflow. The environment type does not identify a particular preview or developer deployment.
+
+## Stage mappings and runtime callbacks
+
+The CLI's `--stage` and the JavaScript API's `stage` select an exact own key
+in `stages`. Unknown stages fail before source or credential callbacks run.
+Each mapping declares `kind`, a non-secret `source` reference, and the exact
+`target` described in the deployment and defaults sections below.
+Kinds `dev`, `prod` and `preview` require a cloud target of that deployment type;
+`local` requires an anonymous target. `project-defaults` is a separate central
+operation with an explicit project/type target. A preview deployment mapping
+always uses the exact deployment writer and never updates defaults.
+
+The runtime object supplies callbacks; the CLI loads it through
+`createRuntime({ stage, kind, target, mode })` in the runtime module:
+
+- `sources`: an own-key map of async loaders returning the shared
+  `{ defaults, deployment }` selected-string records. Each loader is bound to
+  one explicit source config or environment/folder.
+- `getToken({ stage, kind, target })`: loads the exact destination credential in
+  memory. Source loading and validation finish before this callback runs.
+- `generated({ stage, target })`: optional async loader for explicitly declared
+  generated overrides. Callback target metadata is copied so it cannot redirect
+  the operation.
+- `fetch`: optional HTTP transport, primarily for credential-free tests.
+
+Use the existing `loadDoppler` reader or `loadInfisical` adapter inside source
+callbacks. Read source values afresh on every invocation. An existing
+secret loader may supply runtime credentials or configuration, but a cached
+selection must not replace a fresh source read when rotation matters. Callbacks
+must not log values or use persistent plaintext caches. Stage mappings and runtime
+registrations belong to trusted consumer code. Preview CI supplies sandbox
+credentials; stage validation does not sandbox arbitrary JavaScript.
+
+An optional `overlaySource` names another source loader; `overlayNames` must
+exactly declare the names it returns. `generatedNames` must exactly declare the
+generated loader's result. Composition order is baseline defaults, baseline
+deployment values, explicit source overlay, then explicit generated overrides.
+Each source's defaults/deployment groups are disjoint. Missing or undeclared
+overrides fail before destination authentication. Project defaults mappings
+reject overlays and generated values.
+
+Import `runStage` from `@fantastic.dev/convex-env-sync` and call it with
+`{ stages, stage, runtime, mode, ownership }` to use this pipeline in a standalone
+JavaScript script. Its mode must explicitly be `plan` or `apply`. Plan observes without
+writes; apply reads fresh source values, reconciles and verifies. Alchemy is not
+imported by this pipeline.
 
 ## Manifest values in Doppler
 
@@ -60,7 +106,7 @@ are reserved for credentials and control inputs. Validation errors omit input
 values and JSON parser details. Unselected source values are ignored.
 
 Explicit overlays and generated overrides are implemented by the shared stage
-pipeline described in [Alchemy lifecycle](alchemy.md) and [CLI configuration](cli.md).
+pipeline described in [stage mappings and runtime callbacks](#stage-mappings-and-runtime-callbacks) and [CLI configuration](cli.md).
 The provider writers verify authenticated destination identity, as described below.
 Ownership-aware reconciliation is described in the next section.
 

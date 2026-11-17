@@ -19,7 +19,7 @@
 
 ---
 
-Convex Env Sync delivers selected environment values from Doppler to Convex project defaults and exact deployments. Use its shared engine from a CLI or Alchemy, with explicit mappings for development, production, previews and anonymous local worktrees. Source adapters are replaceable; an optional Infisical adapter accepts a caller-owned client.
+Convex Env Sync delivers selected environment values from Doppler to Convex project defaults and exact deployments. Run it as a standalone CLI or call its JavaScript API from your own scripts and CI jobs. **Alchemy is optional**: a separate adapter lets an existing Alchemy stack invoke the same sync engine. Explicit mappings cover development, production, previews and anonymous local worktrees. Source adapters are replaceable; an optional Infisical adapter accepts a caller-owned client.
 
 **Package version: 0.1.1.** See [npm](https://www.npmjs.com/package/@fantastic.dev/convex-env-sync) for currently published versions. Packed consumption and independent consumer acceptance cover local isolation, cloud development apply/rotation, preview initialization/override preservation and read-only development planning. Production mappings are tested with controlled provider responses; live production delivery has not been verified. The consumer acceptance used the non-Alchemy entrypoints; the Alchemy adapter has separate pinned-runtime tests. <!-- x-release-please-version -->
 
@@ -58,7 +58,25 @@ This first example selects source keys in memory. To compare with an actual dest
 npx --no-install convex-env-sync plan --stage dev --config sync.json --runtime sync-runtime.mjs
 ```
 
-Core, source, writer and CLI imports work without Alchemy. Install `alchemy@2.0.0-beta.87` when using `@fantastic.dev/convex-env-sync/alchemy`; compatibility with other Alchemy versions is unverified. See [public imports and package consumption](docs/package.md). Maintainers can test a candidate before publishing using the [packed CLI fixture](docs/package.md#offline-cli-fixture).
+After reviewing the plan, an authorized standalone apply uses the same configuration:
+
+```sh
+npx --no-install convex-env-sync apply --stage dev --config sync.json --runtime sync-runtime.mjs --ownership .env-sync/dev.json --approve
+```
+
+The [CLI guide](docs/cli.md) contains configuration and runtime examples; no Alchemy setup is required. For a JavaScript script, import `runStage` from `@fantastic.dev/convex-env-sync` and supply the same stage mappings and runtime callbacks. See [public imports and package consumption](docs/package.md). Maintainers can test a candidate before publishing using the [packed CLI fixture](docs/package.md#offline-cli-fixture).
+
+## When secrets update
+
+Changing a secret in Doppler leaves Convex unchanged until you run an apply. Each apply reads fresh selected source values, compares them with the destination, writes changes and verifies readback. A plan only observes and reports changes.
+
+The package has no built-in watcher, polling schedule or webhook handler. Run the CLI or JavaScript API manually or in your existing deployment job. Automatic rotation requires a consumer-owned scheduled job or authenticated webhook handler that invokes an apply for the authorized targets. Updating project defaults alone does not rotate existing deployments; those need explicit updates.
+
+## Optional Alchemy integration
+
+If your application already uses Alchemy, install the documented peer `alchemy@2.0.0-beta.87` and import `Sync` and `syncProvider` from `@fantastic.dev/convex-env-sync/alchemy`. Register the provider in your stack and add a sync resource with explicit stage mappings. Each Alchemy apply invokes the same engine with fresh source reads. Resources that require these values during initialization must depend on the sync's `verified` output.
+
+Only the `/alchemy` entrypoint requires Alchemy. Compatibility with other Alchemy versions is unverified. See the [optional Alchemy integration guide](docs/alchemy.md) for the stack example and dependency ordering.
 
 ## Configure a real application
 
@@ -102,9 +120,9 @@ not authorize those operations. Keep secret values out of source, state and proo
 
 - [Architecture and environment rules](docs/architecture.md)
 - [Configuration and manifests](docs/configuration.md)
-- [Alchemy lifecycle and secret-state rules](docs/alchemy.md)
 - [CLI plan/apply and ownership](docs/cli.md)
 - [Package exports and consumption](docs/package.md)
+- [Optional Alchemy integration and secret-state rules](docs/alchemy.md)
 - [Roadmap](https://github.com/FantasticDevHQ/convex-env-sync/blob/main/docs/roadmap.md)
 - [Development and worktrees](https://github.com/FantasticDevHQ/convex-env-sync/blob/main/docs/development.md)
 

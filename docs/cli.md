@@ -1,7 +1,9 @@
-# Shared command interface
+# Standalone CLI
 
-The installed command uses the same `runStage` pipeline as the Alchemy
-provider. It requires Node.js 22.18+ and the installed npm package.
+The installed command reads selected source values and reconciles them with an
+explicit Convex destination. It requires Node.js 22.18+ and the installed npm
+package. Alchemy is not required or imported. The JavaScript API and optional
+Alchemy adapter call the same `runStage` pipeline.
 
 ```sh
 npx --no-install convex-env-sync plan --stage preview --config sync.json --runtime sync-runtime.mjs
@@ -18,7 +20,7 @@ flags, missing values and unknown stages fail with a nonzero exit code.
 
 The config file is JSON containing only `stages`. Mappings use the kinds, exact
 targets and explicit override declarations described in
-[Alchemy lifecycle](alchemy.md). For example, replace the synthetic identifiers
+[stage mappings and runtime callbacks](configuration.md#stage-mappings-and-runtime-callbacks). For example, replace the synthetic identifiers
 below with the consumer's approved sandbox destination:
 
 ```json
@@ -43,7 +45,7 @@ below with the consumer's approved sandbox destination:
 The CLI reads and validates that static mapping before importing the runtime
 module. Unknown stages therefore cannot execute runtime authentication code.
 The module exports `createRuntime({ stage, kind, target, mode })`, returning the
-same runtime-only source and credential callbacks as `syncProvider`.
+source and credential callbacks described in the configuration guide.
 
 This installed-consumer example reads credentials from the caller's
 injected environment only when its callback runs:
@@ -69,6 +71,19 @@ Runtime modules are trusted executable code. Keep their source free of credentia
 values, defer authentication to callbacks and keep source reads fresh. An
 existing secret loader or `op run` can supply the child process environment;
 never print credential values. Alchemy is not imported by the CLI.
+
+## When to run sync
+
+A Doppler edit does not trigger this command. Run `apply` manually or from a
+trusted CI/deployment job to deliver the current selected values. Every apply
+reads the source again and verifies the destination after reconciliation.
+`plan` observes current drift without applying it.
+
+There is no built-in watcher, scheduler or webhook handler. For automatic
+rotation, the consuming application must supply a scheduled job or authenticated
+webhook handler that invokes apply with the approved target and credentials.
+Project-defaults applies affect defaults only; existing deployments require
+separate exact-target updates or explicitly authorized propagation.
 
 ## Plans, output and ownership
 

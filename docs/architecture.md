@@ -2,6 +2,19 @@
 
 This document describes the implemented design. Source-checkout selection, read-only planning and ownership-aware reconciliation are implemented. Exact deployment planning/apply is implemented using Distilled with in-memory verification. Project/type defaults and explicit per-target propagation are also implemented. Alchemy lifecycle integration is implemented with fresh reads and metadata-only state. The shared CLI uses the same stage pipeline. Packed consumption is tested outside the source checkout; independent consumer acceptance covers local isolation, cloud development apply/rotation, preview initialization/override preservation and read-only development planning. Live production verification and npm publication remain outside that acceptance.
 
+## Invocation and triggers
+
+The standalone CLI and JavaScript `runStage` API invoke the same engine without
+importing Alchemy. The optional `/alchemy` adapter registers a resource/provider
+that invokes that engine during an Alchemy apply. Alchemy is an optional peer,
+not a requirement for source reads or Convex writes.
+
+Every apply reads fresh selected source values and observes the destination.
+Doppler edits do not trigger an apply. The package supplies no watcher, scheduler
+or webhook handler; the consumer must invoke sync manually or from trusted
+automation. An authenticated webhook-triggered job is an integration option the
+consumer must implement, not a service included in this package.
+
 ## Existing foundations
 
 Use [Alchemy Doppler loading](https://alchemy.run/environments/doppler/) or the [Distilled Doppler SDK](https://github.com/alchemy-run/distilled/tree/main/packages/doppler) to read a config. Use [Distilled Convex](https://github.com/alchemy-run/distilled/tree/main/packages/convex) for management and deployment APIs. Do not recreate those clients or wrap the Convex CLI for the same operations.

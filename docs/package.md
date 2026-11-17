@@ -2,6 +2,11 @@
 
 Install the public package in your application with `npm install @fantastic.dev/convex-env-sync` or `pnpm add @fantastic.dev/convex-env-sync`. Node.js 22.18+ is required. Runtime modules are JavaScript ES modules; TypeScript declarations and CommonJS entrypoints are not provided.
 
+Alchemy is optional. Use the installed CLI or the root JavaScript API in any
+application or CI job without installing Alchemy. It is a development dependency
+in this repository to test the separate adapter, and an optional peer dependency
+for consumers who explicitly import `/alchemy`.
+
 ## Maintainer candidate checks
 
 A local tarball verifies the exact artifact before publishing. Consumers normally install from npm. Packing does not publish, deploy or authorize provider writes.
@@ -58,8 +63,28 @@ const report = plan({
 
 This selection-only `plan` does not observe a destination. Use `runStage` with
 `mode: 'plan'` or the command below to observe current values and compute drift.
-See [configuration](configuration.md) and [Alchemy integration](alchemy.md) for
-input contracts and authorization boundaries.
+See [stage mappings and runtime callbacks](configuration.md#stage-mappings-and-runtime-callbacks)
+and the [CLI guide](cli.md) for input contracts and authorization boundaries.
+
+An existing JavaScript script can invoke the shared pipeline directly:
+
+```js
+import { resolveStage, runStage } from '@fantastic.dev/convex-env-sync';
+import { createRuntime } from './sync-runtime.mjs';
+
+export async function syncEnvironment({ stages, stage, mode, ownership }) {
+  const mapping = resolveStage(stages, stage);
+  const runtime = await createRuntime({ stage, kind: mapping.kind, target: mapping.target, mode });
+  return runStage({ stages, stage, runtime, mode, ownership });
+}
+```
+
+This helper validates the mapping before creating the runtime. Keep authentication
+deferred to its callbacks, as in the CLI guide. For apply, the caller
+must serialize overlapping operations for the target and persist the returned
+ownership only after verified success. Use the CLI when you want its ownership
+file persistence and locking. The optional [Alchemy adapter](alchemy.md) instead
+retains ownership through its lifecycle state.
 
 ## Installed command
 

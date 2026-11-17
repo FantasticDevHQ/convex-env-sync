@@ -1,52 +1,27 @@
-# Alchemy lifecycle integration
+# Optional Alchemy integration
 
 The `@fantastic.dev/convex-env-sync/alchemy` adapter is verified
 against Alchemy 2.0.0-beta.87 with Effect 4.1.4. Alchemy is an optional peer, so
-core and provider-only consumers do not need it. The [CLI](cli.md) shares the pipeline. See [package installation](package.md).
+standalone CLI and JavaScript consumers do not need it. Use this adapter only
+when you want an existing Alchemy stack to apply environment sync. The [CLI](cli.md) shares the pipeline. See [package installation](package.md).
 
 ## Stage mapping and runtime loaders
 
-`Sync(id, { stages })` uses Alchemy's current `Stage`. Only an exact own key in
-`stages` is accepted. Each mapping declares `kind`, a non-secret `source`
-reference, and the exact `target` documented in [configuration](configuration.md).
-Kinds `dev`, `prod` and `preview` require a cloud target of that deployment type;
-`local` requires an anonymous target. `project-defaults` is a separate central
-operation with an explicit project/type target. A preview deployment mapping
-always uses the exact deployment writer and never updates defaults.
+This optional adapter uses Alchemy's current `Stage` to select one exact entry
+from the shared [stage mappings](configuration.md#stage-mappings-and-runtime-callbacks).
+`syncProvider(runtime)` registers the same source and credential callbacks used
+by the standalone JavaScript API. `Sync(id, { stages })` declares the resource.
+The core engine and CLI neither import nor require this adapter.
 
-`syncProvider(runtime)` supplies runtime-only callbacks:
+Alchemy's own plan declares lifecycle work without invoking source loaders or
+provider writes. Use the standalone CLI's `plan` or `runStage` with `mode: 'plan'`
+when you need to observe current source and destination values.
 
-- `sources`: an own-key map of async loaders returning the shared
-  `{ defaults, deployment }` selected-string records. Each loader is bound to
-  one explicit source config or environment/folder.
-- `getToken({ stage, kind, target })`: loads the exact destination credential in
-  memory. Source loading and validation finish before this callback runs.
-- `generated({ stage, target })`: optional async loader for explicitly declared
-  generated overrides. Callback target metadata is copied so it cannot redirect
-  the operation.
-- `fetch`: optional HTTP transport, primarily for credential-free tests.
+## Add sync to an existing stack
 
-Use the existing `loadDoppler` reader or `loadInfisical` adapter inside source
-callbacks. Read source values afresh on every invocation. Alchemy's existing
-secret loaders may supply runtime credentials or configuration, but a cached
-selection must not replace a fresh source read when rotation matters. Callbacks
-must not log values or use persistent plaintext caches. Stage mappings and runtime
-registrations belong to trusted consumer code. Preview CI supplies sandbox
-credentials; stage validation does not sandbox arbitrary JavaScript.
-
-An optional `overlaySource` names another source loader; `overlayNames` must
-exactly declare the names it returns. `generatedNames` must exactly declare the
-generated loader's result. Composition order is baseline defaults, baseline
-deployment values, explicit source overlay, then explicit generated overrides.
-Each source's defaults/deployment groups are disjoint. Missing or undeclared
-overrides fail before destination authentication. Project defaults mappings
-reject overlays and generated values.
-
-The shared `runStage({ stages, stage, runtime, mode, ownership })` in
-`src/core/stages.js` uses the same pipeline without importing Alchemy. Its mode
-must explicitly be `plan` or `apply`. Provider plans observe without writes;
-Alchemy's own plan only declares lifecycle work and does not invoke secret
-loaders or provider writes.
+Register `syncProvider(runtime)` alongside your existing providers and declare
+`Sync` inside the stack. Supply the stage mapping and fresh runtime loaders from
+the shared configuration contract. The adapter does not create deployments.
 
 ## Resource composition
 
@@ -87,6 +62,13 @@ through its supported dependency inputs. Registration order alone does not
 establish apply order. The lifecycle test uses an actual dependent Alchemy
 resource and asserts that required values already exist when initialization runs.
 A failed source read or verification prevents that dependent resource from running.
+
+## When an Alchemy apply updates secrets
+
+A Doppler change alone does not run Alchemy or this adapter. The next Alchemy
+apply containing this resource reads fresh selected source values and reconciles
+the exact destination. There is no built-in watcher, scheduler or webhook handler.
+Consumer-owned automation can invoke the standalone CLI/API or the Alchemy stack.
 
 ## Drift, state and teardown
 
