@@ -55,13 +55,13 @@ The result is a name-only plan:
 This first example selects source keys in memory. To compare with an actual destination, configure the [CLI runtime](docs/cli.md) and run a read-only plan:
 
 ```sh
-npx --no-install convex-env-sync plan --stage dev --config sync.json --runtime sync-runtime.mjs
+npx --no-install convex-env-sync plan --stage preview --config sync.json --runtime sync-runtime.mjs
 ```
 
 After reviewing the plan, an authorized standalone apply uses the same configuration:
 
 ```sh
-npx --no-install convex-env-sync apply --stage dev --config sync.json --runtime sync-runtime.mjs --ownership .env-sync/dev.json --approve
+npx --no-install convex-env-sync apply --stage preview --config sync.json --runtime sync-runtime.mjs --ownership .env-sync/preview.json --approve
 ```
 
 The [CLI guide](docs/cli.md) contains configuration and runtime examples; no Alchemy setup is required. For a JavaScript script, import `runStage` from `@fantastic.dev/convex-env-sync` and supply the same stage mappings and runtime callbacks. See [public imports and package consumption](docs/package.md). Maintainers can test a candidate before publishing using the [packed CLI fixture](docs/package.md#offline-cli-fixture).
