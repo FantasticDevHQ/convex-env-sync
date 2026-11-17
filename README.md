@@ -61,6 +61,7 @@ npx --no-install convex-env-sync plan --stage preview --config sync.json --runti
 After reviewing the plan, an authorized standalone apply uses the same configuration:
 
 ```sh
+mkdir -p .env-sync
 npx --no-install convex-env-sync apply --stage preview --config sync.json --runtime sync-runtime.mjs --ownership .env-sync/preview.json --approve
 ```
 

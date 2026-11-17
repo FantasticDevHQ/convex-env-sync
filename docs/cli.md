@@ -7,6 +7,7 @@ Alchemy adapter call the same `runStage` pipeline.
 
 ```sh
 npx --no-install convex-env-sync plan --stage preview --config sync.json --runtime sync-runtime.mjs
+mkdir -p .worktree
 npx --no-install convex-env-sync apply --stage preview --config sync.json --runtime sync-runtime.mjs --ownership .worktree/env-sync-ownership.json --approve
 ```
 
@@ -15,6 +16,10 @@ intentional command option, not permission to use production credentials in an
 untrusted job. The consumer still authorizes the exact target and supplies only
 the credentials allowed in that workflow. Unknown commands, flags, repeated
 flags, missing values and unknown stages fail with a nonzero exit code.
+
+The ownership file's parent directory must already exist; the example creates
+it before apply. The CLI creates the ownership file after successful verification
+and uses a sibling lock file while applying.
 
 ## Configuration and runtime separation
 
