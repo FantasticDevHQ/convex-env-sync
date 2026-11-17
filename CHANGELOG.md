@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.2](https://github.com/FantasticDevHQ/convex-env-sync/compare/v0.1.1...v0.1.2) (2026-11-17)
+
+
+### Documentation
+
+* CES-21 clarify standalone sync and optional Alchemy ([#17](https://github.com/FantasticDevHQ/convex-env-sync/issues/17)) ([978421d](https://github.com/FantasticDevHQ/convex-env-sync/commit/978421d5dba0ed03d0465c040bf7b57439a0af8b))
+
 ## [0.1.1](https://github.com/FantasticDevHQ/convex-env-sync/compare/v0.1.0...v0.1.1) (2026-11-14)
 
 
