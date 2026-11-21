@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.4](https://github.com/FantasticDevHQ/convex-env-sync/compare/v0.1.3...v0.1.4) (2026-11-21)
+
+
+### Continuous Integration
+
+* **release:** OSS-43 make release PRs meet the PR standard ([#22](https://github.com/FantasticDevHQ/convex-env-sync/issues/22)) ([9813fec](https://github.com/FantasticDevHQ/convex-env-sync/commit/9813fec8fc2ca5cbb926a9d0cb823950d6e20ff3))
+
 ## [0.1.3](https://github.com/FantasticDevHQ/convex-env-sync/compare/v0.1.2...v0.1.3) (2026-11-21)
 
 

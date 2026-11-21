@@ -62,12 +62,25 @@ jobs:
         if: steps.release-pr.outputs.prs_created == 'true'
         with:
           node-version: 24
+      # `prs_created` is true whenever Release Please created or updated the
+      # release PR. Release PRs meet the PR standard with no bot exemption: the
+      # step writes the required sections, amends the release commit with a
+      # `No-ticket: automated release` footer and force-pushes it with a lease
+      # using the App token (so CI runs on the new head), then pins auto-merge.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        if: steps.release-pr.outputs.prs_created == 'true'
+        with:
+          ref: ${{ fromJSON(steps.release-pr.outputs.pr).headBranchName }}
+          token: ${{ steps.app-token.outputs.token }}
+          path: .release-pr
+          fetch-depth: 2 # the release commit and its parent, for the amend
+          persist-credentials: false
       - name: Validate generated metadata and enable protected auto-merge
         if: steps.release-pr.outputs.prs_created == 'true'
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
           RELEASE_PR: ${{ steps.release-pr.outputs.pr }}
-        run: node scripts/release/pr.mjs
+        run: node scripts/release/pr.mjs .release-pr
 
   verify-release:
     name: Verify release
