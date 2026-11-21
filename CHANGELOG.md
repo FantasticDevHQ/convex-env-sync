@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.5](https://github.com/FantasticDevHQ/convex-env-sync/compare/v0.1.4...v0.1.5) (2026-11-21)
+
+
+### Continuous Integration
+
+* **standards:** add the issue standard workflow ([#21](https://github.com/FantasticDevHQ/convex-env-sync/issues/21)) ([fc7acf0](https://github.com/FantasticDevHQ/convex-env-sync/commit/fc7acf026a6ed4d0dff9c05a09df1123ca9f54ad))
+
 ## [0.1.4](https://github.com/FantasticDevHQ/convex-env-sync/compare/v0.1.3...v0.1.4) (2026-11-21)
 
 
