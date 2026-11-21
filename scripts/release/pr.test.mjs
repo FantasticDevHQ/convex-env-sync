@@ -44,6 +44,15 @@ function fixture({
       return [...Object.keys(next), ...(source ? ['src/index.js'] : [])].map(
         (filename) => ({ filename, status: 'modified' }),
       );
+    // Release Please commits carry no ticket; the exception must not need one.
+    if (method === 'GET' && path.startsWith('/pulls/7/commits'))
+      return [
+        {
+          sha: 'c'.repeat(40),
+          commit: { message: 'chore(main): release 0.1.1' },
+          parents: [{}],
+        },
+      ];
     if (method === 'GET' && path.startsWith('/contents/')) {
       const [name, sha] = path.slice('/contents/'.length).split('?ref=');
       const text = (sha === pr.base.sha ? old : next)[name];
@@ -69,16 +78,17 @@ function fixture({
   return { api, pr, calls };
 }
 const runUrl = `https://github.com/${repository}/actions/runs/123`;
+const releaseCommits = [{ sha: 'c'.repeat(40), message: 'chore(main): release 0.1.1' }];
 test('generated PR keeps five sections and actual workflow identity without inventing a ticket', () => {
   const body = releaseBody('0.1.1', 'Release notes', '123', runUrl);
   assert.deepEqual(
-    validatePullRequest({ title: 'chore(main): release 0.1.1', body }, [], {
+    validatePullRequest({ title: 'chore(main): release 0.1.1', body }, [], releaseCommits, {
       ticketRequired: false,
     }),
     [],
   );
   assert.ok(
-    validatePullRequest({ title: 'chore(main): release 0.1.1', body }, [])
+    validatePullRequest({ title: 'chore(main): release 0.1.1', body }, [], releaseCommits)
       .length,
   );
   assert.equal(
@@ -102,6 +112,8 @@ test('normal author cannot opt into the ticket exception through PR metadata', a
     calls.filter((c) => /\/statuses\//.test(c.path)).at(-1).data.state,
     'failure',
   );
+  const comment = calls.find((c) => c.method === 'POST' && c.path === '/issues/7/comments');
+  assert.match(comment.data.body, /has no ticket or issue reference/);
 });
 test('trusted metadata PR passes and still rejects missing required sections', async () => {
   const { api, pr } = fixture();
