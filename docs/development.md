@@ -30,7 +30,8 @@ The optional real Convex integration test is not part of this backend-free repos
 ## Vendored tooling provenance
 
 - Full exported worktree toolkit installed with `node install.mjs` from `FantasticDevHQ/convex-worktrees` commit `442743dd58d958d6798a74f5c466a8fc2ddb333a`. Only its config is adapted to `convex: false` and `frontend: false`; preserve all exported modules, tests, profiles and license.
-- PR workflow, template, validator, enforcer and tests taken from the standards reference at commit `bdc09318c912edaa7ca9e3815609735f18a83be7`, derived from the canonical Jib Factory PR standard. The workflow was checked against the canonical scheduler configuration during bootstrap. Keep trusted base code execution.
+- PR workflow, validator, enforcer and tests taken from the standards reference at commit `bdc09318c912edaa7ca9e3815609735f18a83be7`, derived from the canonical Jib Factory PR standard. The validator, enforcer and tests were resynced with the Fantastic.Dev OSS standards for commit ticket checks and GitHub issue references, keeping this repository's generated-release exception. The workflow was checked against the canonical scheduler configuration during bootstrap. Keep trusted base code execution.
+- No local PR template: GitHub applies the organization default from `FantasticDevHQ/.github`, together with the shared contributing guide, Code of Conduct, security policy and issue forms.
 - Official Fantastic.Dev logo is copied unchanged. SHA-256: `4869b13bae195ef7f934fb3a1dd2b37e86700ce33bf88f9c863e7597e20c2075`. Canonical brand asset commit: `0ce1aebc3e8418d7e59ce171e117cf9793dd2f3a`.
 
 ## CI

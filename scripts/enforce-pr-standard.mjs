@@ -19,7 +19,7 @@ export async function enforcePullRequestStandard({ api, number, runUrl }) {
       target_url: runUrl,
     });
   try {
-    await status("pending", "Checking PR title and required sections");
+    await status("pending", "Checking PR title, sections and commit ticket links");
     const files = [];
     const changes = [];
     for (let page = 1; ; page++) {
@@ -36,11 +36,31 @@ export async function enforcePullRequestStandard({ api, number, runUrl }) {
           "PR file listing reached GitHub's 3,000-file limit; split the PR before validation",
         );
     }
+    const commits = [];
+    for (let page = 1; ; page++) {
+      const batch = await api(
+        "GET",
+        `/pulls/${number}/commits?per_page=100&page=${page}`,
+      );
+      commits.push(
+        ...batch.map((item) => ({
+          sha: item.sha,
+          message: item.commit?.message ?? "",
+          merge: (item.parents?.length ?? 0) > 1,
+        })),
+      );
+      if (batch.length < 100) break;
+      // GitHub lists at most 250 commits for a PR. Do not silently skip any.
+      if (page === 3)
+        throw new Error(
+          "PR commit listing reached GitHub's 250-commit limit; split the PR before validation",
+        );
+    }
     const generated = isGeneratedRelease(pr);
     const errors = generated
       ? [...await generatedReleaseErrors(pr, changes, (path, sha) => readContent(api, path, sha)),
-         ...validatePullRequest(pr, files, { ticketRequired: false })]
-      : validatePullRequest(pr, files);
+         ...validatePullRequest(pr, files, commits, { ticketRequired: false })]
+      : validatePullRequest(pr, files, commits);
     let previous;
     for (let page = 1; ; page++) {
       const comments = await api(
@@ -56,8 +76,8 @@ export async function enforcePullRequestStandard({ api, number, runUrl }) {
       if (previous || comments.length < 100) break;
     }
     const body = errors.length
-      ? `${marker}\n## PR standard failed\n\nThis PR is blocked until these items are corrected:\n\n${errors.map((error) => `- ${error}`).join("\n")}\n\nEdit the PR title/description to rerun this check. See [the PR standard](https://github.com/JibHQ/jib-factory/blob/main/docs/pull-request-standard.md). Evidence must describe actual verification; reviewers assess whether it proves the change.\n\n[Check run](${runUrl})`
-      : `${marker}\n## PR standard passed\n\n${generated ? "The approved release App, metadata-only diff and five required sections meet the generated-release exception." : "The title and Summary, What, Why, Evidence, and Agent sections meet the required format."} UI changes include screenshot and/or video attachment references when required. Reviewers still assess correctness and evidence quality.\n\n[Check run](${runUrl})`;
+      ? `${marker}\n## PR standard failed\n\nThis PR is blocked until these items are corrected:\n\n${errors.map((error) => `- ${error}`).join("\n")}\n\nEdit the PR title/description, or reword and push commits, to rerun this check. See [the PR standard](https://github.com/FantasticDevHQ/convex-env-sync/blob/main/docs/pull-request-standard.md). Evidence must describe actual verification; reviewers assess whether it proves the change.\n\n[Check run](${runUrl})`
+      : `${marker}\n## PR standard passed\n\n${generated ? "The approved release App, metadata-only diff and five required sections meet the generated-release exception." : "The title, the Summary, What, Why, Evidence, and Agent sections, and every commit's Linear reference meet the required format."} UI changes include screenshot and/or video attachment references when required. Reviewers still assess correctness and evidence quality.\n\n[Check run](${runUrl})`;
     if (previous && previous.body !== body)
       await api("PATCH", `/issues/comments/${previous.id}`, { body });
     else if (!previous && errors.length)
@@ -65,8 +85,8 @@ export async function enforcePullRequestStandard({ api, number, runUrl }) {
     await status(
       errors.length ? "failure" : "success",
       errors.length
-        ? "Fix the PR title/description; see the bot comment"
-        : "PR title and required sections meet the standard",
+        ? "Fix the PR metadata or commits; see the bot comment"
+        : "PR title, sections and commits meet the standard",
     );
     return errors.length === 0;
   } catch (error) {

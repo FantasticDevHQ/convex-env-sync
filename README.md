@@ -129,7 +129,27 @@ not authorize those operations. Keep secret values out of source, state and proo
 
 ## Contributing
 
-Read [AGENTS.md](https://github.com/FantasticDevHQ/convex-env-sync/blob/main/AGENTS.md) and the [PR standard](https://github.com/FantasticDevHQ/convex-env-sync/blob/main/docs/pull-request-standard.md), choose an owning ticket, and run `pnpm check`. This library repository has neither an application backend nor frontend. Live integration acceptance belongs in an authorized consuming application. Publication and provider changes require owner authorization.
+Contributions are welcome. Read the
+[contributing guide](https://github.com/FantasticDevHQ/.github/blob/main/CONTRIBUTING.md)
+and [Code of Conduct](https://github.com/FantasticDevHQ/.github/blob/main/CODE_OF_CONDUCT.md),
+and report vulnerabilities privately as described in the
+[security policy](https://github.com/FantasticDevHQ/.github/blob/main/SECURITY.md).
+
+Source development needs Node.js 22.18+ and pnpm 12.18.0.
+
+```sh
+pnpm install --frozen-lockfile
+pnpm check   # core, adapter, package, PR-standard, release and worktree tests
+```
+
+See [docs/development.md](https://github.com/FantasticDevHQ/convex-env-sync/blob/main/docs/development.md)
+for the full workflow and [AGENTS.md](https://github.com/FantasticDevHQ/convex-env-sync/blob/main/AGENTS.md)
+for repository rules. Pull requests follow the
+[PR standard](https://github.com/FantasticDevHQ/convex-env-sync/blob/main/docs/pull-request-standard.md);
+reference the owning ticket or GitHub issue on each commit. This library
+repository has neither an application backend nor frontend. Live integration
+acceptance belongs in an authorized consuming application. Publication and
+provider changes require owner authorization.
 
 ## License
 

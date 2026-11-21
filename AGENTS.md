@@ -8,7 +8,7 @@ Reuse @distilled.cloud/convex and @distilled.cloud/doppler, and Alchemy's existi
 
 Keep worktree implementation/tests under scripts/worktree/. This repository has neither an application backend nor frontend. Never provision a Convex backend just to test this library. Maintain upstream provenance when updating vendored tooling.
 
-Ordinary CI and release verification use UbiCloud, with `ubicloud-standard-2-ubuntu-2404` as default. The owner approved only the npm OIDC/provenance publishing job in release.yml on GitHub-hosted `ubuntu-24.04`; no other hosted-runner exception is granted. Preserve trusted base execution for the write-token PR workflow. Follow docs/pull-request-standard.md and the PR template; evidence belongs in PRs, never committed evidence files.
+Ordinary CI and release verification use UbiCloud, with `ubicloud-standard-2-ubuntu-2404` as default. The owner approved only the npm OIDC/provenance publishing job in release.yml on GitHub-hosted `ubuntu-24.04`; no other hosted-runner exception is granted. Preserve trusted base execution for the write-token PR workflow. Follow docs/pull-request-standard.md and the organization default PR template from FantasticDevHQ/.github; evidence belongs in PRs, never committed evidence files.
 
 Independent final-commit acceptance review uses GPT-6.1 Terra with medium reasoning. Obtain a fresh review after material changes. Do not merge, publish packages, apply remote environment changes, or deploy without the user's authorization.
 
