@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.6](https://github.com/FantasticDevHQ/convex-env-sync/compare/v0.1.5...v0.1.6) (2026-11-21)
+
+
+### Continuous Integration
+
+* **standards:** add the PR standard re-run workflow ([#25](https://github.com/FantasticDevHQ/convex-env-sync/issues/25)) ([59002dd](https://github.com/FantasticDevHQ/convex-env-sync/commit/59002dd756d1d3402b665abe0dede22734d2a3e8))
+
 ## [0.1.5](https://github.com/FantasticDevHQ/convex-env-sync/compare/v0.1.4...v0.1.5) (2026-11-21)
 
 
