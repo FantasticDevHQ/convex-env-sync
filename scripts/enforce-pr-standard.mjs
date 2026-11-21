@@ -2,9 +2,6 @@ import { readFile } from "node:fs/promises";
 import { pathToFileURL } from "node:url";
 import { validatePullRequest } from "./pr-standard.mjs";
 
-import { isGeneratedRelease, generatedReleaseErrors } from "./release/candidate.mjs";
-import { readContent } from "./release/github.mjs";
-
 const marker = "<!-- jib-pr-standard -->";
 
 export async function enforcePullRequestStandard({ api, number, runUrl }) {
@@ -21,14 +18,12 @@ export async function enforcePullRequestStandard({ api, number, runUrl }) {
   try {
     await status("pending", "Checking PR title, sections and commit ticket links");
     const files = [];
-    const changes = [];
     for (let page = 1; ; page++) {
       const batch = await api(
         "GET",
         `/pulls/${number}/files?per_page=100&page=${page}`,
       );
       files.push(...batch.map((file) => file.filename));
-      changes.push(...batch);
       if (batch.length < 100) break;
       // GitHub exposes at most 3,000 changed files. Do not silently miss UI changes.
       if (page === 30)
@@ -56,11 +51,7 @@ export async function enforcePullRequestStandard({ api, number, runUrl }) {
           "PR commit listing reached GitHub's 250-commit limit; split the PR before validation",
         );
     }
-    const generated = isGeneratedRelease(pr);
-    const errors = generated
-      ? [...await generatedReleaseErrors(pr, changes, (path, sha) => readContent(api, path, sha)),
-         ...validatePullRequest(pr, files, commits, { ticketRequired: false })]
-      : validatePullRequest(pr, files, commits);
+    const errors = validatePullRequest(pr, files, commits);
     let previous;
     for (let page = 1; ; page++) {
       const comments = await api(
@@ -77,7 +68,7 @@ export async function enforcePullRequestStandard({ api, number, runUrl }) {
     }
     const body = errors.length
       ? `${marker}\n## PR standard failed\n\nThis PR is blocked until these items are corrected:\n\n${errors.map((error) => `- ${error}`).join("\n")}\n\nEdit the PR title/description, or reword and push commits, to rerun this check. See [the PR standard](https://github.com/FantasticDevHQ/convex-env-sync/blob/main/docs/pull-request-standard.md). Evidence must describe actual verification; reviewers assess whether it proves the change.\n\n[Check run](${runUrl})`
-      : `${marker}\n## PR standard passed\n\n${generated ? "The approved release App, metadata-only diff and five required sections meet the generated-release exception." : "The title, the Summary, What, Why, Evidence, and Agent sections, and every commit's Linear reference meet the required format."} UI changes include screenshot and/or video attachment references when required. Reviewers still assess correctness and evidence quality.\n\n[Check run](${runUrl})`;
+      : `${marker}\n## PR standard passed\n\nThe title, the Summary, What, Why, Evidence, and Agent sections, and every commit's Linear reference meet the required format. UI changes include screenshot and/or video attachment references when required. Reviewers still assess correctness and evidence quality.\n\n[Check run](${runUrl})`;
     if (previous && previous.body !== body)
       await api("PATCH", `/issues/comments/${previous.id}`, { body });
     else if (!previous && errors.length)
