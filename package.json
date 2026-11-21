@@ -1,6 +1,6 @@
 {
   "name": "@fantastic.dev/convex-env-sync",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Standalone Convex environment synchronization from Doppler and pluggable secret sources, with optional Alchemy integration.",
   "type": "module",
   "license": "MIT",

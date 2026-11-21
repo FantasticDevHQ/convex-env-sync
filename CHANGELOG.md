@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.3](https://github.com/FantasticDevHQ/convex-env-sync/compare/v0.1.2...v0.1.3) (2026-11-21)
+
+
+### Documentation
+
+* **community:** adopt organization community health defaults ([#19](https://github.com/FantasticDevHQ/convex-env-sync/issues/19)) ([a2e1a4b](https://github.com/FantasticDevHQ/convex-env-sync/commit/a2e1a4b691c95235899c5b7842f57ea496867912))
+
 ## [0.1.2](https://github.com/FantasticDevHQ/convex-env-sync/compare/v0.1.1...v0.1.2) (2026-11-17)
 
 
