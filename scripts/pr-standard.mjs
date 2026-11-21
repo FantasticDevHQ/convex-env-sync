@@ -261,14 +261,10 @@ function uiEvidenceErrors(text, files) {
   return errors;
 }
 
-// `ticketRequired: false` is reserved for the trusted generated-release
-// exception decided by the enforcer: it skips commit and Summary ticket
-// linkage, while titles, sections, evidence and agent identity still apply.
 export function validatePullRequest(
   { title = "", body = "" },
   files = [],
   commits = [],
-  { ticketRequired = true } = {},
 ) {
   title ??= "";
   const errors = [];
@@ -276,9 +272,7 @@ export function validatePullRequest(
     errors.push(
       "Use `type(scope): description` or `type: description`. A ticket ID is optional. Types: feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert. Example: `fix(auth): correct session expiry`.",
     );
-  const commitCheck = ticketRequired
-    ? commitErrors(commits)
-    : { errors: [], tickets: new Set() };
+  const commitCheck = commitErrors(commits);
   errors.push(...commitCheck.errors);
   const found = parseSections((body ?? "").replace(/<!--[\s\S]*?(-->|$)/g, ""));
   for (const name of sections) {
@@ -295,7 +289,7 @@ export function validatePullRequest(
       );
     if (matches.length === 1 && name === "Agent")
       errors.push(...agentErrors(matches[0].text));
-    if (matches.length === 1 && name === "Summary" && ticketRequired)
+    if (matches.length === 1 && name === "Summary")
       errors.push(...linkageErrors(matches[0].text, title, commitCheck.tickets));
     if (matches.length === 1 && name === "Evidence")
       errors.push(...uiEvidenceErrors(matches[0].text, files));

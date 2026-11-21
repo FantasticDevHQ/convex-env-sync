@@ -16,16 +16,26 @@ in the same workflow run. A GITHUB_TOKEN-created tag does not start another run.
 The existing FantasticDev npm releases GitHub App creates the PR so ordinary CI
 runs. Its token is restricted to this repository. The owner explicitly approved
 automatic merging of generated metadata-only releases after protected checks,
-without a new per-version Linear ticket or Terra acceptance. Five PR sections and
-actual workflow identity are retained. Source-changing implementation PRs keep
-normal ticketing and independent final-commit acceptance.
+without a new per-version Linear ticket or Terra acceptance. Source-changing
+implementation PRs keep normal ticketing and independent final-commit acceptance.
 
-Trusted-base validation checks the App identity, same-repository branch, changed
-file inventory and both immutable file contents through GitHub's API. Only a
-consistent version/manifest increase, appended changelog and README version text
-qualify. Scripts, dependencies, publishing settings, source files, deletions and
-renames cannot use this exception. Auto-merge pins the inspected head and relies
-on required branch protection; it never bypasses checks.
+Release PRs meet the PR standard with no validator exemption. Whenever Release
+Please creates or updates the release PR (`prs_created`), the workflow checks out
+the release branch with the App token and `scripts/release/pr.mjs` writes the five
+sections (`No ticket: automated release`, actual workflow identity and run link).
+It then amends the release commit so its body ends with `No-ticket: automated
+release`, skipping commits that already have it and keeping the author and
+subject. Finally it force-pushes with a lease using the App token, so CI runs on
+the new head. The body is written before the push so every check on the final
+head sees it.
+
+Before any of that, trusted-base validation checks the App identity,
+same-repository branch, changed file inventory and both immutable file contents
+through GitHub's API. Only a consistent version/manifest increase, appended
+changelog and README version text qualify for auto-merge. Scripts, dependencies,
+publishing settings, source files, deletions and renames are refused. Auto-merge
+pins the amended head and relies on required branch protection; it never bypasses
+checks.
 
 ## Verification and publishing
 
