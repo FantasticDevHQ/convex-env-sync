@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.7](https://github.com/FantasticDevHQ/convex-env-sync/compare/v0.1.6...v0.1.7) (2026-11-24)
+
+
+### Documentation
+
+* **readme:** align README with Fantastic.Dev OSS standards ([#27](https://github.com/FantasticDevHQ/convex-env-sync/issues/27)) ([23797da](https://github.com/FantasticDevHQ/convex-env-sync/commit/23797da0168ab0913784026eb7292da5a5dfe8d6))
+
 ## [0.1.6](https://github.com/FantasticDevHQ/convex-env-sync/compare/v0.1.5...v0.1.6) (2026-11-21)
 
 
