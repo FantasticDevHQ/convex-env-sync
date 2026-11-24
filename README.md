@@ -6,13 +6,21 @@
 
 <p align="center"><strong>A shared foundation for Convex environment synchronization.</strong></p>
 
-[A Fantastic.Dev Project](https://fantastic.dev)
+<p align="center">A <a href="https://fantastic.dev">Fantastic.Dev</a> Project</p>
 
 <p align="center">
   <a href="https://fantastic.dev"><img src="https://img.shields.io/badge/Fantastic.dev-94C173?style=for-the-badge&amp;logoColor=0c0e13" alt="Visit Fantastic.Dev" /></a>
   <a href="https://github.com/FantasticDevHQ"><img src="https://img.shields.io/badge/GitHub-0c0e13?style=for-the-badge&amp;logo=github&amp;logoColor=white" alt="Fantastic.Dev on GitHub" /></a>
   <a href="https://www.youtube.com/@FantasticDevHQ"><img src="https://img.shields.io/badge/YouTube-FF0033?style=for-the-badge&amp;logo=youtube&amp;logoColor=white" alt="Fantastic.Dev on YouTube" /></a>
   <a href="https://twitter.com/FantasticDevHQ"><img src="https://img.shields.io/badge/Twitter_%2F_X-0c0e13?style=for-the-badge&amp;logo=x&amp;logoColor=white" alt="Fantastic.Dev on Twitter / X" /></a>
+</p>
+
+<p align="center">
+  <a href="https://www.npmjs.com/package/@fantastic.dev/convex-env-sync"><img src="https://img.shields.io/npm/v/@fantastic.dev/convex-env-sync?style=flat-square" alt="npm version" /></a>
+  <a href="https://www.npmjs.com/package/@fantastic.dev/convex-env-sync"><img src="https://img.shields.io/npm/dm/@fantastic.dev/convex-env-sync?style=flat-square" alt="npm monthly downloads" /></a>
+  <a href="https://github.com/FantasticDevHQ/convex-env-sync/actions/workflows/check.yml"><img src="https://img.shields.io/github/actions/workflow/status/FantasticDevHQ/convex-env-sync/check.yml?branch=main&amp;style=flat-square&amp;label=checks" alt="Repository checks on main" /></a>
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/FantasticDevHQ/convex-env-sync?style=flat-square" alt="MIT license" /></a>
+  <a href="https://github.com/FantasticDevHQ/convex-env-sync/stargazers"><img src="https://img.shields.io/github/stars/FantasticDevHQ/convex-env-sync?style=flat-square&amp;label=stars" alt="GitHub stars" /></a>
 </p>
 
 <p align="center"><a href="#quick-start">Quick start</a> · <a href="#have-my-agent-set-this-up">Agent setup</a> · <a href="docs/architecture.md">Architecture</a></p>
@@ -24,6 +32,36 @@ Convex Env Sync delivers selected environment values from Doppler to Convex proj
 **Package version: 0.1.6.** See [npm](https://www.npmjs.com/package/@fantastic.dev/convex-env-sync) for currently published versions. Packed consumption and independent consumer acceptance cover local isolation, cloud development apply/rotation, preview initialization/override preservation and read-only development planning. Production mappings are tested with controlled provider responses; live production delivery has not been verified. The consumer acceptance used the non-Alchemy entrypoints; the Alchemy adapter has separate pinned-runtime tests. <!-- x-release-please-version -->
 
 ## Quick start
+
+### Have my agent set this up
+
+Copy this into your coding agent in your consuming application:
+
+```text
+Use the Convex Env Sync README and consumer guides to set up this consuming application:
+https://github.com/FantasticDevHQ/convex-env-sync
+https://github.com/FantasticDevHQ/convex-env-sync/blob/main/docs/package.md
+https://github.com/FantasticDevHQ/convex-env-sync/blob/main/docs/configuration.md
+https://github.com/FantasticDevHQ/convex-env-sync/blob/main/docs/cli.md
+
+Read applicable AGENTS.md and AGENT.md files. Before changing files, inspect
+existing code, Git status, the consuming app's package manager, committed
+lockfile and Node.js 22.18+ prerequisite, and preserve existing work. Install
+the exact npm version in the README into this consuming application with its
+package manager and run its in-memory plan first to verify a concrete first
+result.
+
+For integration, identify explicit stages, source configs, selection manifests,
+exact destination identities and existing credential loaders. Prepare the app's
+integration PR with its required checks and evidence. Obtain authorization before
+provider writes, provisioning, deployment or publication; the example does
+not authorize those operations. Keep secret values out of source, state and proof.
+
+Report changed files, commands run, checks passed, name-only expected
+operations, the installed artifact and any unresolved requirements.
+```
+
+### Manual setup
 
 Requires Node.js 22.18+. Runtime modules are JavaScript ESM; TypeScript declarations and CommonJS entrypoints are not supplied.
 
@@ -97,25 +135,6 @@ Project/type defaults seed new deployments; they are not live inheritance. An ex
 Use trusted runtime callbacks to read fresh source values and load credentials from an existing secret loader or injected environment. Keep values out of config JSON, resource props, logs, snapshots and plaintext state. Plans and ownership metadata contain identities, names and results, never values or value hashes.
 
 Run a read-only plan first. CLI apply requires `--approve` and a target-scoped `--ownership` file, and the operator must have authorization for that exact operation. Use one ownership path per target across cooperating applies. Unrelated keys are retained; deletion requires both prior ownership and an explicit deletion declaration. An omitted selection is not deletion permission. Apply verifies readback in memory before reporting success. Review the [CLI failure, locking and retry rules](docs/cli.md) before applying, and keep production credentials out of untrusted jobs.
-
-## Have my agent set this up
-
-```text
-Use the Convex Env Sync README and consumer guides:
-https://github.com/FantasticDevHQ/convex-env-sync
-https://github.com/FantasticDevHQ/convex-env-sync/blob/main/docs/package.md
-https://github.com/FantasticDevHQ/convex-env-sync/blob/main/docs/configuration.md
-https://github.com/FantasticDevHQ/convex-env-sync/blob/main/docs/cli.md
-
-Read applicable AGENTS.md files, inspect the consuming app and preserve its work.
-Install the exact npm version in the README and run its in-memory plan first.
-Report the installed artifact, commands and name-only expected operations.
-For integration, identify explicit stages, source configs, selection manifests,
-exact destination identities and existing credential loaders. Prepare the app's
-integration PR with its required checks and evidence. Obtain authorization before
-provider writes, provisioning, deployment or publication; the example does
-not authorize those operations. Keep secret values out of source, state and proof.
-```
 
 ## Documentation
 
