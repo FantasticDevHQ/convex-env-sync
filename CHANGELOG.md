@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.8](https://github.com/FantasticDevHQ/convex-env-sync/compare/v0.1.7...v0.1.8) (2026-11-28)
+
+
+### Continuous Integration
+
+* **standards:** inherit pull request ticket linkage (OSS-59) ([d24672d](https://github.com/FantasticDevHQ/convex-env-sync/commit/d24672dc24ef52579996130d8430f9e667138941))
+* **standards:** OSS-59 inherit ticket linkage from the pull request ([#29](https://github.com/FantasticDevHQ/convex-env-sync/issues/29)) ([d24672d](https://github.com/FantasticDevHQ/convex-env-sync/commit/d24672dc24ef52579996130d8430f9e667138941))
+
 ## [0.1.7](https://github.com/FantasticDevHQ/convex-env-sync/compare/v0.1.6...v0.1.7) (2026-11-24)
 
 
