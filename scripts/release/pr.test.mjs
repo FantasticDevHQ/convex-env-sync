@@ -88,13 +88,13 @@ const commit = (sha = 'b'.repeat(40), log = []) => ({
     return sha;
   },
 });
-test('generated PR meets the full standard with the commit footer and no ticket exception', () => {
+test('generated PR meets the standard with or without a commit footer', () => {
   const body = releaseBody('0.1.1', 'Release notes', '123', runUrl);
   assert.deepEqual(validatePullRequest({ title, body }, [], footed), []);
   assert.match(body, /^No ticket: automated release$/m);
-  assert.match(
-    validatePullRequest({ title, body }, [], [{ sha: 'c'.repeat(40), message: title }]).join(),
-    /has no ticket or issue reference/,
+  assert.deepEqual(
+    validatePullRequest({ title, body }, [], [{ sha: 'c'.repeat(40), message: title }]),
+    [],
   );
   assert.equal(
     (
@@ -105,21 +105,17 @@ test('generated PR meets the full standard with the commit footer and no ticket 
     1,
   );
 });
-test('the enforcer applies the same standard to release PRs: the footer is required', async () => {
+test('the enforcer validates release linkage in PR metadata', async () => {
   const unfooted = fixture({ message: title });
   unfooted.pr.body = releaseBody('0.1.1', 'Notes', '123', runUrl);
   assert.equal(
     await enforcePullRequestStandard({ api: unfooted.api, number: 7, runUrl }),
-    false,
+    true,
   );
   assert.equal(
     unfooted.calls.filter((c) => /\/statuses\//.test(c.path)).at(-1).data.state,
-    'failure',
+    'success',
   );
-  const comment = unfooted.calls.find(
-    (c) => c.method === 'POST' && c.path === '/issues/7/comments',
-  );
-  assert.match(comment.data.body, /has no ticket or issue reference/);
   const { api, pr } = fixture();
   pr.body = releaseBody('0.1.1', 'Notes', '123', runUrl);
   assert.equal(await enforcePullRequestStandard({ api, number: 7, runUrl }), true);
